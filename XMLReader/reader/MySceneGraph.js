@@ -34,7 +34,21 @@ MySceneGraph.prototype.onXMLReady=function()
 		return;
 	}*/	
 
-	error = this.parseScene(rootElement);
+	var error = this.parseScene(rootElement);
+
+	if (error != null) {
+		this.onXMLError(error);
+		return;
+	}
+
+	error = this.parseViews(rootElement);
+
+	if (error != null) {
+		this.onXMLError(error);
+		return;
+	}
+
+	error = this.parseIlumination(rootElement);
 
 	if (error != null) {
 		this.onXMLError(error);
@@ -61,7 +75,7 @@ MySceneGraph.prototype.parseScene = function(rootElement) {
 	}
 
 	var scene = elems[0];
-	this.axisLength = this.reader.getNamedItem("axis_length").value;
+	this.axisLength = scene.attributes.getNamedItem("axis_length").value;
 
 	console.log("Scene element read");
 }
@@ -103,6 +117,8 @@ MySceneGraph.prototype.parseViews = function(rootElement)
 	this.camera.to.x = to.attributes.getNamedItem("x").value;
 	this.camera.to.y = to.attributes.getNamedItem("y").value;
 	this.camera.to.z = to.attributes.getNamedItem("z").value;
+
+	console.log("Cameras read");
 }
 
 MySceneGraph.prototype.parseIlumination = function(rootElement)
@@ -128,10 +144,35 @@ MySceneGraph.prototype.parseIlumination = function(rootElement)
 	this.illumination.ambient.b = ambient.attributes.getNamedItem("b").value;
 	this.illumination.ambient.a = ambient.attributes.getNamedItem("a").value;
 
+	this.background = [];
+
 	this.background[0] = background.attributes.getNamedItem("r").value;
 	this.background[1] = background.attributes.getNamedItem("g").value;
 	this.background[2] = background.attributes.getNamedItem("b").value;
 	this.background[3] = background.attributes.getNamedItem("a").value;
+
+	console.log("illumination read");
+}
+
+MySceneGraph.prototype.parsePrimitives= function(rootElement)
+{
+	var elems =  rootElement.getElementsByTagName('primitives');
+	if (elems == null) {
+		return "primitives element is missing.";
+	}
+
+	if (elems.length != 1) {
+		return "either zero or more than one 'primitives' element found.";
+	}
+
+	var primitives = elems[0];
+
+	var x1 = primitives.children.attributes.getNamedItem("x1").value;
+	var x2 = primitives.children.attributes.getNamedItem("x2").value;
+	var y1 = primitives.children.attributes.getNamedItem("y1").value;
+	var y2 = primitives.children.attributes.getNamedItem("y2").value;
+
+	this.rectangle = new MyQuad(this, x1, x2, y1, y2);
 }
 
 /*

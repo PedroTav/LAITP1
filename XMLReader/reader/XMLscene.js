@@ -13,6 +13,8 @@ XMLscene.prototype.init = function (application) {
 
     this.initLights();
 
+	this.transf;
+
     this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
     this.gl.clearDepth(100.0);
@@ -48,6 +50,22 @@ XMLscene.prototype.onGraphLoaded = function ()
 	this.gl.clearColor(this.graph.background[0],this.graph.background[1],this.graph.background[2],this.graph.background[3]);
 	this.lights[0].setVisible(true);
     this.lights[0].enable();
+    this.setAmbient(this.graph.illumination.ambient.r,this.graph.illumination.ambient.g,this.graph.illumination.ambient.b,this.graph.illumination.ambient.a);
+
+    //Load Axis
+    this.axis.length = this.graph.axisLength;
+
+    //Load Camera
+	var posFrom = [this.graph.camera.from.x, this.graph.camera.from.y, this.graph.camera.from.z];
+	var posTo = [this.graph.camera.to.x, this.graph.camera.to.y, this.graph.camera.to.z]
+
+    this.camera = new CGFcamera(this.graph.camera.angle, this.camera.near, this.camera.far, posFrom, posTo);
+
+    this.interface.setActiveCamera(this.camera);
+
+    //Load Primites
+    this.rectangle = new MyQuad(this, -0.5, -0.5, 0.5, 0.5);
+
 };
 
 XMLscene.prototype.display = function () {
@@ -78,5 +96,15 @@ XMLscene.prototype.display = function () {
 	{
 		this.lights[0].update();
 	};	
+
+	// Displays
+	this.pushMatrix();
+	//this.rectangle.display();
+	this.popMatrix();
+
 };
 
+XMLscene.prototype.setInterface = function(interface)
+{
+	this.interface = interface;
+}
