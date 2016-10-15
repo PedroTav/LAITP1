@@ -151,7 +151,7 @@ MySceneGraph.prototype.parseViews = function(rootElement)
 
 	this.camera.near = perspective.attributes.getNamedItem("near").value;
 	this.camera.far = perspective.attributes.getNamedItem("far").value;
-	this.camera.angle = perspective.attributes.getNamedItem("angle").value;
+	this.camera.angle = perspective.attributes.getNamedItem("angle").value*degToRad;
 
 	var from = perspective.children[0];
 
