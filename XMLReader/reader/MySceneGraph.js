@@ -279,7 +279,19 @@ MySceneGraph.prototype.processRectangle= function(type, name)
 
 MySceneGraph.prototype.processTriangle= function(type, name)
 {
+	var x1 = type.attributes.getNamedItem("x1").value;
+	var x2 = type.attributes.getNamedItem("x2").value;
+	var x3 = type.attributes.getNamedItem("x3").value;
+	var y1 = type.attributes.getNamedItem("y1").value;
+	var y2 = type.attributes.getNamedItem("y2").value;
+	var y3 = type.attributes.getNamedItem("y3").value;
+	var z1 = type.attributes.getNamedItem("z1").value;
+	var z2 = type.attributes.getNamedItem("z2").value;
+	var z3 = type.attributes.getNamedItem("z3").value;
 
+	this.triangle[this.triangleID] = new MyTriangle(this.scene, x1, x2, x3, y1, y2, y3, z1, z2, z3);
+	this.triangleStrings[this.triangleID] = name;
+	this.triangleID++;
 }
 
 MySceneGraph.prototype.processCylinder= function(type, name)
