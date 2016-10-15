@@ -22,6 +22,14 @@ XMLscene.prototype.init = function (application) {
 	this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
 
+    this.rectangle = [];
+    this.triangle = [];
+    this.cylinder = [];
+    this.sphere = [];
+    this.torus = [];
+
+    this.component = [];
+
 	this.axis=new CGFaxis(this);
 };
 
@@ -64,8 +72,49 @@ XMLscene.prototype.onGraphLoaded = function ()
     this.interface.setActiveCamera(this.camera);
 
     //Load Primites
-    this.rectangle = new MyQuad(this, -0.5, -0.5, 0.5, 0.5);
+    //this.rectangle = new MyQuad(this, -0.5, -0.5, 0.5, 0.5);
 
+	//Load rectangles
+    
+    for(var i = 0; i < this.graph.rectangleID; i++)
+    {
+    	this.rectangle[i] = this.graph.rectangle[i];
+    }
+
+	//Load Triangles
+
+    for(var i = 0; i < this.graph.triangleID; i++)
+    {
+    	this.triangle[i] = this.graph.triangle[i];
+    }
+
+	//Load Cylinders
+    
+    for(var i = 0; i < this.graph.cylinderID; i++)
+    {
+    	this.cylinder[i] = this.graph.cylinder[i];
+    }
+
+	//Load Spheres
+
+    for(var i = 0; i < this.graph.sphereID; i++)
+    {
+    	this.sphere[i] = this.graph.sphere[i];
+    }
+
+	//Load Torus
+    
+    for(var i = 0; i < this.graph.torusID; i++)
+    {
+    	this.torus[i] = this.graph.torus[i];
+    }
+
+    //Load components
+
+	for(var i = 0; i < this.graph.object.length; i++)
+    {
+    	this.component.push(this.graph.object[i]);
+    }
 };
 
 XMLscene.prototype.display = function () {
@@ -98,9 +147,21 @@ XMLscene.prototype.display = function () {
 	};	
 
 	// Displays
-	this.pushMatrix();
-	//this.rectangle.display();
-	this.popMatrix();
+
+	//Display rectangles
+	/*for(var i = 0; i < this.rectangle.length; i++)
+	{
+		this.pushMatrix();
+		this.rectangle[i].display();
+		this.popMatrix();
+	}*/
+
+	for(var i = 0; i < this.component.length; i++)
+	{
+		this.pushMatrix();
+		this.component[i].display();
+		this.popMatrix();
+	}
 
 };
 

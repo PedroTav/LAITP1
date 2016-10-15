@@ -105,7 +105,7 @@
     
         <!-- Deve existir um ou mais blocos "primitive" -->
         <!-- Os identificadores "id" nao podem ser repetidos -->
-        <primitive id="rectangle">
+        <primitive id="rectangle1">
            
             <!-- apenas pode existir UMA das seguintes tags: -->
             <!--     rectangle, triangle, cylinder, sphere, torus -->
@@ -113,16 +113,16 @@
             <!-- em OpenGL/GLUT; o cilindro deve adicionalmente ter tampas -->
             <rectangle x1="-0.5" y1="-0.5" x2="0.5" y2="0.5" />
 		</primitive>
-		<primitive id="triangle">
+		<primitive id="triangle1">
             <triangle x1="0.0" y1="0.0" z1="0.0" x2="1.0" y2="1.0" z2="1.0" x3="0.5" y3="0.5" z3="0.5" />
 		</primitive>
-		<primitive id="cylinder">
+		<primitive id="cylinder1">
             <cylinder base="ff" top="ff" height="ff" slices="ii" stacks="ii" />
 		</primitive>
-		<primitive id="sphere">
+		<primitive id="sphere1">
 		   <sphere radius="ff" slices="ii" stacks="ii" />
 		</primitive>
-		<primitive id="torus">
+		<primitive id="torus1">
             <torus inner="ff" outer="ff" slices="ii" loops="ii" />
         </primitive>
         

@@ -9,6 +9,27 @@ function MySceneGraph(filename, scene) {
 	// File reading 
 	this.reader = new CGFXMLreader();
 
+	this.rectangle = [];
+	this.triangle = [];
+	this.cylinder = [];
+	this.sphere = [];
+	this.torus = [];
+
+	this.rectangleID = 0;
+	this.triangleID = 0;
+	this.cylinderID = 0;
+	this.sphereID = 0;
+	this.torusID = 0;
+
+	this.rectangleStrings = [];
+	this.triangleStrings = [];
+	this.cylinderStrings = [];
+	this.sphereStrings = [];
+	this.torusStrings = [];
+
+	this.object = [];
+	this.objectStrings = [];
+
 	/*
 	 * Read the contents of the xml file, and refer to this class for loading and error handlers.
 	 * After the file is read, the reader calls onXMLReady on this object.
@@ -49,6 +70,20 @@ MySceneGraph.prototype.onXMLReady=function()
 	}
 
 	error = this.parseIlumination(rootElement);
+
+	if (error != null) {
+		this.onXMLError(error);
+		return;
+	}
+
+	error = this.parsePrimitives(rootElement);
+
+	if (error != null) {
+		this.onXMLError(error);
+		return;
+	}
+
+	error = this.parseComponents(rootElement);
 
 	if (error != null) {
 		this.onXMLError(error);
@@ -165,14 +200,224 @@ MySceneGraph.prototype.parsePrimitives= function(rootElement)
 		return "either zero or more than one 'primitives' element found.";
 	}
 
-	var primitives = elems[0];
+	var primitives = elems[0].getElementsByTagName('primitive');
 
-	var x1 = primitives.children.attributes.getNamedItem("x1").value;
-	var x2 = primitives.children.attributes.getNamedItem("x2").value;
-	var y1 = primitives.children.attributes.getNamedItem("y1").value;
-	var y2 = primitives.children.attributes.getNamedItem("y2").value;
+	var type;
+	var pLength = primitives.length;
 
-	this.rectangle = new MyQuad(this, x1, x2, y1, y2);
+
+	for(var i = 0; i < pLength; i++)
+	{
+		type = primitives[i].getElementsByTagName('rectangle');
+		var name = primitives[i].attributes.getNamedItem("id").value;
+
+		if(type != null && type.length > 0)
+		{
+			this.processRectangle(type[0], name);
+			continue;
+		}
+
+		type = primitives[i].getElementsByTagName('triangle');
+
+		if(type != null && type.length > 0)
+		{
+			this.processTriangle(type[0], name);
+			continue;
+		}
+
+		type = primitives[i].getElementsByTagName('cylinder');
+
+		if(type != null && type.length > 0)
+		{
+			this.processCylinder(type[0], name);
+			continue;
+		}
+
+		type = primitives[i].getElementsByTagName('sphere');
+
+		if(type != null && type.length > 0)
+		{
+			this.processSphere(type[0], name);
+			continue;
+		}
+
+		type = primitives[i].getElementsByTagName('torus');
+
+		if(type != null && type.length > 0)
+		{
+			this.processTorus(type[0], name);
+			continue;
+		}
+	}
+
+	console.log("primitives read");
+}
+
+MySceneGraph.prototype.processRectangle= function(type, name)
+{
+	var x1 = type.attributes.getNamedItem("x1").value;
+	var x2 = type.attributes.getNamedItem("x2").value;
+	var y1 = type.attributes.getNamedItem("y1").value;
+	var y2 = type.attributes.getNamedItem("y2").value;
+
+	this.rectangle[this.rectangleID] = new MyQuad(this.scene, x1, x2, y1, y2);
+	this.rectangleStrings[this.rectangleID] = name;
+	this.rectangleID++;
+}
+
+MySceneGraph.prototype.processTriangle= function(type, name)
+{
+
+}
+
+MySceneGraph.prototype.processCylinder= function(type, name)
+{
+
+}
+
+MySceneGraph.prototype.processSphere= function(type, name)
+{
+
+}
+
+MySceneGraph.prototype.processTorus= function(type, name)
+{
+
+}
+
+MySceneGraph.prototype.parseComponents = function(rootElement)
+{
+	var elems =  rootElement.getElementsByTagName('components');
+	if (elems == null) {
+		return "components element is missing.";
+	}
+
+	if (elems.length != 1) {
+		return "either zero or more than one 'components' element found.";
+	}
+
+	var components = elems[0].getElementsByTagName('component');
+
+	var cLength = components.length;
+
+	for(var i = 0; i < cLength; i++)
+	{
+		this.processComponent(components[i]);
+	}
+	
+	console.log("components read");
+}
+
+MySceneGraph.prototype.processComponent = function(component)
+{
+	var children = component.getElementsByTagName('children');
+
+	var ref = children[0].getElementsByTagName('primitiveref');
+
+	this.objectStrings.push(component.attributes.getNamedItem("id").value);
+
+	if(ref != null && ref.length > 0)
+	{
+		var name = ref[0].attributes.getNamedItem("id").value;
+
+		this.createNewPrimitive(name);
+	}
+	else
+	{
+		ref = children[0].getElementsByTagName('componentref');
+
+		if(ref != null && ref.length > 0)
+		{
+			var c = new MyComponent(this.scene);
+
+			var cLength = ref.length;
+
+			for(var i = 0; i < cLength; i++)
+			{
+				var name = ref[i].attributes.getNamedItem("id").value;
+
+				var comp = this.getComponentFromName(name);
+
+				if(comp != null)
+				{
+					c.push(comp);
+				}
+			}
+
+			this.object.push(c);
+		}
+	}
+}
+
+MySceneGraph.prototype.createNewPrimitive = function(name)
+{
+	for(var i = 0; i < this.rectangleStrings.length; i++)
+	{
+		if(this.rectangleStrings[i] == name)
+		{
+			var c = new MyComponent(this.scene);
+
+			c.components.push(this.rectangle[i]);
+			this.object.push(c);
+		}
+	}
+
+	for(var i = 0; i < this.triangleStrings.length; i++)
+	{
+		if(this.triangleStrings[i] == name)
+		{
+			var c = new MyComponent(this.scene);
+
+			c.components.push(this.triangle[i]);
+			this.object.push(c);
+		}
+	}
+
+	for(var i = 0; i < this.cylinderStrings.length; i++)
+	{
+		if(this.cylinderStrings[i] == name)
+		{
+			var c = new MyComponent(this.scene);
+
+			c.components.push(this.cylinder[i]);
+			this.object.push(c);
+		}
+	}
+
+	for(var i = 0; i < this.sphereStrings.length; i++)
+	{
+		if(this.sphereStrings[i] == name)
+		{
+			var c = new MyComponent(this.scene);
+
+			c.components.push(this.sphere[i]);
+			this.object.push(c);
+		}
+	}
+
+	for(var i = 0; i < this.torusStrings.length; i++)
+	{
+		if(this.torusStrings[i] == name)
+		{
+			var c = new MyComponent(this.scene);
+
+			c.components.push(this.torus[i]);
+			this.object.push(c);
+		}
+	}
+}
+
+MySceneGraph.prototype.getComponentFromName = function(name)
+{
+	for(var i = 0; i < this.objectStrings.length; i++)
+	{
+		if(this.objectStrings[i] == name)
+		{
+			return this.object[i];
+		}
+	}
+
+	return null;
 }
 
 /*
