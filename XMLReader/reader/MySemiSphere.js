@@ -40,7 +40,7 @@
  for(var f = 0; f <= this.stacks ; f++){
 
 	//var angle = 0;
- 	console.log("phy: " + this.phy);
+ 	//console.log("phy: " + this.phy);
  	//this.vertices = [];
 	for(var i = 0; i <= this.slices; i++) {
 		this.vertices.push(Math.cos(angle)*Math.cos(this.phy+f*inc), Math.sin(angle)*Math.cos(this.phy+f*inc),Math.sin(this.phy+f*inc));
@@ -95,9 +95,9 @@
 
     }
 
-	console.log("vertices " + this.vertices.length);
+	/*console.log("vertices " + this.vertices.length);
 	console.log("indices " + this.indices.length);
-	console.log("normals " + this.normals.length);
+	console.log("normals " + this.normals.length);*/
 
 	inaux += this.slices * 4;
 	//this.phy += inc;

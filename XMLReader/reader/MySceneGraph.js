@@ -298,15 +298,24 @@ MySceneGraph.prototype.processCylinder= function(type, name)
 {
 	var slices = type.attributes.getNamedItem("slices").value;
 	var stacks = type.attributes.getNamedItem("stacks").value;
+	var base = type.attributes.getNamedItem("base").value;
+	var top = type.attributes.getNamedItem("top").value;
+	var height = type.attributes.getNamedItem("height").value;
 
-	this.cylinder[this.cylinderID] = new MyCylinderWithTops(this.scene, slices, stacks);
+	this.cylinder[this.cylinderID] = new MyCylinderWithTops(this.scene, slices, stacks, base, top, height);
 	this.cylinderStrings[this.cylinderID] = name;
 	this.cylinderID++;
 }
 
 MySceneGraph.prototype.processSphere= function(type, name)
 {
+	var slices = type.attributes.getNamedItem("slices").value;
+	var stacks = type.attributes.getNamedItem("stacks").value;
+	var radius = type.attributes.getNamedItem("radius").value;
 
+	this.sphere[this.sphereID] = new MySphere(this.scene, slices, stacks, radius);
+	this.sphereStrings[this.sphereID] = name;
+	this.sphereID++;
 }
 
 MySceneGraph.prototype.processTorus= function(type, name)

@@ -2,11 +2,16 @@
  * MyCylinder
  * @constructor
  */
- function MyCylinder(scene, slices, stacks) {
+ function MyCylinder(scene, slices, stacks, base, top) {
  	CGFobject.call(this,scene);
 	
 	this.slices = slices;
 	this.stacks = stacks;
+
+	this.dif = (2*top - 2*base)/this.stacks;
+	this.radius = base*2;
+	//this.radius = 0.5;
+	//this.dif = 0;
 
  	this.initBuffers();
  };
@@ -44,11 +49,15 @@
  
  	//this.vertices = [];
 	for(var i = 0; i < this.slices; i++) {
-		this.vertices.push(Math.cos(angle), Math.sin(angle),z);
-		this.vertices.push(Math.cos(angle), Math.sin(angle),z + z_inc);
+		this.vertices.push(this.radius*Math.cos(angle), this.radius*Math.sin(angle),z);
+		this.radius += this.dif;
+		this.vertices.push(this.radius*Math.cos(angle), this.radius*Math.sin(angle),z + z_inc);
 		angle += incAngle;
-		this.vertices.push(Math.cos(angle), Math.sin(angle),z);
-		this.vertices.push(Math.cos(angle), Math.sin(angle),z + z_inc);
+		this.radius -= this.dif;
+		this.vertices.push(this.radius*Math.cos(angle), this.radius*Math.sin(angle),z);
+		this.radius += this.dif;
+		this.vertices.push(this.radius*Math.cos(angle), this.radius*Math.sin(angle),z + z_inc);
+		this.radius -= this.dif;
 	}
 
 
@@ -76,12 +85,12 @@
 
  	//this.normals = [];
 	for(var i= 0; i < this.slices; i++) {
-		this.normals.push(Math.cos(angle), Math.sin(angle), 0);
-		this.normals.push(Math.cos(angle), Math.sin(angle), 0);
+		this.normals.push(this.radius*Math.cos(angle), this.radius*Math.sin(angle), 0);
+		this.normals.push(this.radius*Math.cos(angle), this.radius*Math.sin(angle), 0);
 		//angle+= incAngle - angle_next;
 		angle+= incAngle;
-		this.normals.push(Math.cos(angle), Math.sin(angle), 0);
-		this.normals.push(Math.cos(angle), Math.sin(angle), 0);
+		this.normals.push(this.radius*Math.cos(angle), this.radius*Math.sin(angle), 0);
+		this.normals.push(this.radius*Math.cos(angle), this.radius*Math.sin(angle), 0);
 
 	}
 
@@ -107,6 +116,7 @@
 
 	inaux += this.slices * 4;
 	z += z_inc;
+	this.radius += this.dif;
  }
 
  	this.primitiveType = this.scene.gl.TRIANGLES;

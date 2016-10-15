@@ -1,15 +1,14 @@
-function MyCylinderWithTops(scene, slices, stacks) {
+function MyCylinderWithTops(scene, slices, stacks, base, top, height) {
 	CGFobject.call(this,scene);
 
-	this.cylinder = new MyCylinder(scene, slices, stacks);
+	this.height = height;
+	this.base = base;
+	this.top = top;
+
+	this.cylinder = new MyCylinder(scene, slices, height*stacks, base, top);
 
 	this.circle1 = new MyCircle(scene, slices);
 	this.circle2 = new MyCircle(scene, slices);
-
-	this.materialDefault = new CGFappearance(this.scene);
-
-	this.clockAppearance = new CGFappearance(this.scene);
-	this.clockAppearance.loadTexture("../resources/images/clock.png");
 
 	this.initBuffers();
 };
@@ -19,19 +18,22 @@ MyCylinderWithTops.prototype.constructor = MyCylinderWithTops;
 
 MyCylinderWithTops.prototype.display = function ()
 {
-    this.scene.pushMatrix();
-    this.cylinder.display();
-    this.scene.popMatrix();
+	this.scene.pushMatrix()
+		this.scene.pushMatrix();
+		this.scene.scale(1, 1, this.height);
+		this.cylinder.display();
+		this.scene.popMatrix();
 
-    this.scene.pushMatrix();
-    this.scene.rotate(Math.PI, 0, 1, 0);
-    this.scene.translate(0, 0, 1*this.cylinder.stacks);
-    this.circle2.display();
-    this.scene.popMatrix();
-    
-    this.scene.pushMatrix();
-    this.clockAppearance.apply();
-    this.circle1.display();
-    this.materialDefault.apply();
-    this.scene.popMatrix();
+		this.scene.pushMatrix();
+		this.scene.scale(this.top*2, this.top*2, 1);
+		this.scene.rotate(Math.PI, 0, 1, 0);
+		this.scene.translate(0, 0, this.height);
+		this.circle2.display();
+		this.scene.popMatrix();
+
+		this.scene.pushMatrix();
+		this.scene.scale(this.base*2, this.base*2, 1);
+		this.circle1.display();
+		this.scene.popMatrix();
+	this.scene.popMatrix();
  }
