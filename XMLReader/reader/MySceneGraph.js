@@ -296,7 +296,12 @@ MySceneGraph.prototype.processTriangle= function(type, name)
 
 MySceneGraph.prototype.processCylinder= function(type, name)
 {
+	var slices = type.attributes.getNamedItem("slices").value;
+	var stacks = type.attributes.getNamedItem("stacks").value;
 
+	this.cylinder[this.cylinderID] = new MyCylinderWithTops(this.scene, slices, stacks);
+	this.cylinderStrings[this.cylinderID] = name;
+	this.cylinderID++;
 }
 
 MySceneGraph.prototype.processSphere= function(type, name)
