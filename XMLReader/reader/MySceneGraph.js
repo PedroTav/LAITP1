@@ -1,4 +1,6 @@
 
+var degToRad = Math.PI / 180.0;
+
 function MySceneGraph(filename, scene) {
 	this.loadedOk = null;
 	
@@ -29,6 +31,9 @@ function MySceneGraph(filename, scene) {
 
 	this.object = [];
 	this.objectStrings = [];
+
+	this.transformations = [];
+	this.transformationsID = [];
 
 	/*
 	 * Read the contents of the xml file, and refer to this class for loading and error handlers.
@@ -70,6 +75,13 @@ MySceneGraph.prototype.onXMLReady=function()
 	}
 
 	error = this.parseIlumination(rootElement);
+
+	if (error != null) {
+		this.onXMLError(error);
+		return;
+	}
+	
+	error = this.parseTransformations(rootElement);
 
 	if (error != null) {
 		this.onXMLError(error);
@@ -304,12 +316,16 @@ MySceneGraph.prototype.parseComponents = function(rootElement)
 	{
 		this.processComponent(components[i]);
 	}
-	
+
 	console.log("components read");
 }
 
 MySceneGraph.prototype.processComponent = function(component)
 {
+	var c = new MyComponent(this.scene);
+
+	this.processTransforms(component, c);
+
 	var children = component.getElementsByTagName('children');
 
 	var ref = children[0].getElementsByTagName('primitiveref');
@@ -320,7 +336,7 @@ MySceneGraph.prototype.processComponent = function(component)
 	{
 		var name = ref[0].attributes.getNamedItem("id").value;
 
-		this.createNewPrimitive(name);
+		this.createNewPrimitive(name, c);
 	}
 	else
 	{
@@ -328,8 +344,6 @@ MySceneGraph.prototype.processComponent = function(component)
 
 		if(ref != null && ref.length > 0)
 		{
-			var c = new MyComponent(this.scene);
-
 			var cLength = ref.length;
 
 			for(var i = 0; i < cLength; i++)
@@ -340,23 +354,107 @@ MySceneGraph.prototype.processComponent = function(component)
 
 				if(comp != null)
 				{
-					c.push(comp);
+					c.components.push(comp);
 				}
-			}
 
-			this.object.push(c);
+				this.object.push(c);
+			}
 		}
 	}
 }
 
-MySceneGraph.prototype.createNewPrimitive = function(name)
+MySceneGraph.prototype.processTransforms = function(component, c)
+{
+	var t = component.getElementsByTagName('transformation');
+
+	var tRef = t[0].getElementsByTagName('transformationref');
+
+	if(tRef != null && tRef.length > 0)
+	{
+		var name = tRef[0].attributes.getNamedItem("id").value;
+
+		for(var i = 0; i < this.transformationsID.length; i++)
+		{
+			if(this.transformationsID[i] == name)
+			{
+				c.transformations.push(this.transformations[i]);
+			}
+		}
+	}
+	else
+	{
+		var transf = t[0].children;
+
+		var currT = new MyFullTransform();
+
+		for(var i = 0; i < transf.length; i++)
+		{
+			var name = transf[i].nodeName;
+
+			var p = new MyTransformation();
+
+			if(name == "translate")
+			{
+				var x = transf[i].attributes.getNamedItem("x").value;
+				var y = transf[i].attributes.getNamedItem("y").value;
+				var z = transf[i].attributes.getNamedItem("z").value;
+
+				p.setTranslate(x, y, z);
+			}
+
+			if(name == "scale")
+			{
+				var x = transf[i].attributes.getNamedItem("x").value;
+				var y = transf[i].attributes.getNamedItem("y").value;
+				var z = transf[i].attributes.getNamedItem("z").value;
+
+				p.setScale(x, y, z);
+			}
+
+			if(name == "rotate")
+			{
+				var axis = transf[i].attributes.getNamedItem("axis").value;
+				var angle = transf[i].attributes.getNamedItem("angle").value*degToRad;
+
+				var x, y, z;
+
+				if(axis == "x")
+				{
+					x = 1;
+					y = 0;
+					z = 0;
+				}
+
+				if(axis == "y")
+				{
+					x = 0;
+					y = 1;
+					z = 0;
+				}
+
+				if(axis == "z")
+				{
+					x = 0;
+					y = 0;
+					z = 1;
+				}
+
+				p.setRotate(x, y, z, angle);
+			}
+
+			currT.transformations.push(p)
+		}
+
+		c.transformations.push(currT);
+	}
+}
+
+MySceneGraph.prototype.createNewPrimitive = function(name, c)
 {
 	for(var i = 0; i < this.rectangleStrings.length; i++)
 	{
 		if(this.rectangleStrings[i] == name)
 		{
-			var c = new MyComponent(this.scene);
-
 			c.components.push(this.rectangle[i]);
 			this.object.push(c);
 		}
@@ -366,8 +464,6 @@ MySceneGraph.prototype.createNewPrimitive = function(name)
 	{
 		if(this.triangleStrings[i] == name)
 		{
-			var c = new MyComponent(this.scene);
-
 			c.components.push(this.triangle[i]);
 			this.object.push(c);
 		}
@@ -377,8 +473,6 @@ MySceneGraph.prototype.createNewPrimitive = function(name)
 	{
 		if(this.cylinderStrings[i] == name)
 		{
-			var c = new MyComponent(this.scene);
-
 			c.components.push(this.cylinder[i]);
 			this.object.push(c);
 		}
@@ -388,8 +482,6 @@ MySceneGraph.prototype.createNewPrimitive = function(name)
 	{
 		if(this.sphereStrings[i] == name)
 		{
-			var c = new MyComponent(this.scene);
-
 			c.components.push(this.sphere[i]);
 			this.object.push(c);
 		}
@@ -399,8 +491,6 @@ MySceneGraph.prototype.createNewPrimitive = function(name)
 	{
 		if(this.torusStrings[i] == name)
 		{
-			var c = new MyComponent(this.scene);
-
 			c.components.push(this.torus[i]);
 			this.object.push(c);
 		}
@@ -418,6 +508,95 @@ MySceneGraph.prototype.getComponentFromName = function(name)
 	}
 
 	return null;
+}
+
+MySceneGraph.prototype.parseTransformations = function(rootElement)
+{
+	var elems =  rootElement.getElementsByTagName('transformations');
+	if (elems == null) {
+		return "transformations element is missing.";
+	}
+
+	if (elems.length != 1) {
+		return "either zero or more than one 'transformations' element found.";
+	}
+
+	var t = elems[0].getElementsByTagName('transformation');
+
+	for(var i = 0; i < t.length; i++)
+	{
+		this.createTransform(t[i]);
+	}
+
+	console.log("transformations read");
+}
+
+MySceneGraph.prototype.createTransform = function(t)
+{
+	var transf = t.children;
+
+	var currT = new MyFullTransform();
+
+	for(var i = 0; i < transf.length; i++)
+	{
+		var name = transf[i].nodeName;
+
+		var p = new MyTransformation();
+
+		if(name == "translate")
+		{
+			var x = transf[i].attributes.getNamedItem("x").value;
+			var y = transf[i].attributes.getNamedItem("y").value;
+			var z = transf[i].attributes.getNamedItem("z").value;
+
+			p.setTranslate(x, y, z);
+		}
+
+		if(name == "scale")
+		{
+			var x = transf[i].attributes.getNamedItem("x").value;
+			var y = transf[i].attributes.getNamedItem("y").value;
+			var z = transf[i].attributes.getNamedItem("z").value;
+
+			p.setScale(x, y, z);
+		}
+
+		if(name == "rotate")
+		{
+			var axis = transf[i].attributes.getNamedItem("axis").value;
+			var angle = transf[i].attributes.getNamedItem("angle").value*degToRad;
+
+			var x, y, z;
+
+			if(axis == "x")
+			{
+				x = 1;
+				y = 0;
+				z = 0;
+			}
+
+			if(axis == "y")
+			{
+				x = 0;
+				y = 1;
+				z = 0;
+			}
+
+			if(axis == "z")
+			{
+				x = 0;
+				y = 0;
+				z = 1;
+			}
+
+			p.setRotate(x, y, z, angle);
+		}
+
+		currT.transformations.push(p)
+	}
+
+	this.transformations.push(currT);
+	this.transformationsID.push(t.attributes.getNamedItem("id").value);
 }
 
 /*
