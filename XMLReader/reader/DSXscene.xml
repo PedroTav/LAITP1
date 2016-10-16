@@ -4,7 +4,7 @@
 
     <!-- deve definir-se um objeto para raiz do grafo , assim -->
     <!-- como o comprimento dos tres eixos (cilindros) -->
-    <scene root="wheelshape" axis_length="30.0" />
+    <scene root="root" axis_length="30.0" />
     
     
     <views default="cameras" >
@@ -134,14 +134,13 @@
     
     
     <components>
-		<component id="box">
+		
+		<component id="floor">
         
             
             <transformation>
             
-               <translate x="1.0" y="1.0" z="1.0" />
-			   <rotate axis="x" angle="90.0" />
-			   <scale x="2.0" y="2.0" z="2.0" />
+               <translate x="0.0" y="-3.0" z="0.0" /> 
 			   
             </transformation>
        
@@ -158,7 +157,173 @@
             </children>
             
         </component>
-	
+		<component id="box-part1">
+        
+            
+            <transformation>
+            
+               
+			   <rotate axis="z" angle="90.0" />
+			   
+			   
+            </transformation>
+       
+            <materials>
+                <material id="ss" />
+            </materials>
+                         
+            <texture id="ss" />
+            
+            <children>
+            
+                <primitiveref id="rectangle" />
+				
+            </children>
+            
+        </component>
+		<component id="box-part2">
+        
+            
+            <transformation>
+				
+			<translate x="0.0" y="0.0" z="-1.0" />    
+			<rotate axis="z" angle="90.0" />
+			   		   
+            </transformation>
+       
+            <materials>
+                <material id="ss" />
+            </materials>
+                         
+            <texture id="ss" />
+            
+            <children>
+            
+                <primitiveref id="rectangle" />
+				
+            </children>
+            
+        </component>
+		<component id="box-part3">
+        
+            
+            <transformation>
+				
+			<translate x="0.0" y="0.5" z="-0.5" />    
+			<rotate axis="x" angle="90.0" />
+			   		   
+            </transformation>
+       
+            <materials>
+                <material id="ss" />
+            </materials>
+                         
+            <texture id="ss" />
+            
+            <children>
+            
+                <primitiveref id="rectangle" />
+				
+            </children>
+            
+        </component>
+		<component id="box-part4">
+        
+            
+            <transformation>
+				
+			<translate x="0.0" y="-0.5" z="-0.5" />    
+			<rotate axis="x" angle="90.0" />
+			   		   
+            </transformation>
+       
+            <materials>
+                <material id="ss" />
+            </materials>
+                         
+            <texture id="ss" />
+            
+            <children>
+            
+                <primitiveref id="rectangle" />
+				
+            </children>
+            
+        </component>
+		<component id="box-part5">
+        
+            
+            <transformation>
+				
+			<translate x="0.5" y="0.0" z="-0.5" />    
+			<rotate axis="y" angle="90.0" />
+			   		   
+            </transformation>
+       
+            <materials>
+                <material id="ss" />
+            </materials>
+                         
+            <texture id="ss" />
+            
+            <children>
+            
+                <primitiveref id="rectangle" />
+				
+            </children>
+            
+        </component>
+		<component id="box-part6">
+        
+            
+            <transformation>
+				
+			<translate x="-0.5" y="0.0" z="-0.5" />    
+			<rotate axis="y" angle="90.0" />
+			   		   
+            </transformation>
+       
+            <materials>
+                <material id="ss" />
+            </materials>
+                         
+            <texture id="ss" />
+            
+            <children>
+            
+                <primitiveref id="rectangle" />
+				
+            </children>
+            
+        </component>
+		<component id="box">
+        
+            
+            <transformation>
+			
+			   <translate x="0.0" y="0.0" z="0.5" />    
+			   <scale x="2.0" y="0.5" z="1.0" />
+			   
+            </transformation>
+       
+            <materials>
+                <material id="ss" />
+            </materials>
+                         
+            <texture id="ss" />
+            
+            <children>
+            
+                <componentref id="box-part1" />
+				<componentref id="box-part2" />
+				<componentref id="box-part3" />
+				<componentref id="box-part4" />
+				<componentref id="box-part5" />
+				<componentref id="box-part6" />
+				
+            </children>
+            
+        </component> 
 		<component id="wheel1">
         
             
@@ -269,11 +434,38 @@
                 <componentref id="wheel2" />
 				<componentref id="wheel3" />
 				<componentref id="wheel4" />
-				<componentref id="box" />
+				
 				
             </children>
             
-        </component
+        </component>  
+		
+		<component id="root">
+        
+            
+            <transformation>
+            
+              
+			   
+            </transformation>
+       
+            <materials>
+                <material id="ss" />
+            </materials>
+                         
+            <texture id="ss" />
+            
+            <children>
+            
+				<componentref id="wheelshape" /> 
+				<componentref id="floor" />
+                <componentref id="box" /> 
+				<componentref id="empty" />
+				
+				
+            </children>
+            
+        </component>
         
     </components>
 

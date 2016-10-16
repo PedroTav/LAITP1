@@ -351,13 +351,19 @@ MySceneGraph.prototype.parseComponents = function(rootElement)
 
 	for(var i = 0; i < cLength; i++)
 	{
-		this.processComponent(components[i]);
+		var name = components[i].attributes.getNamedItem("id").value;
+
+		if(name == this.rootID)
+		{
+			this.rootElement = this.processComponent(components[i], name, components);
+		}
+		//this.processComponent(components[i]);
 	}
 
 	console.log("components read");
 }
 
-MySceneGraph.prototype.processComponent = function(component)
+MySceneGraph.prototype.processComponent = function(component, name, components)
 {
 	var c = new MyComponent(this.scene);
 
@@ -367,13 +373,15 @@ MySceneGraph.prototype.processComponent = function(component)
 
 	var ref = children[0].getElementsByTagName('primitiveref');
 
-	this.objectStrings.push(component.attributes.getNamedItem("id").value);
+	//this.objectStrings.push(component.attributes.getNamedItem("id").value);
 
 	if(ref != null && ref.length > 0)
 	{
-		var name = ref[0].attributes.getNamedItem("id").value;
+		var namePrimitive = ref[0].attributes.getNamedItem("id").value;
 
-		this.createNewPrimitive(name, c);
+		console.log("Primitive " + name);
+
+		this.createNewPrimitive(namePrimitive, c);
 	}
 	else
 	{
@@ -385,19 +393,34 @@ MySceneGraph.prototype.processComponent = function(component)
 
 			for(var i = 0; i < cLength; i++)
 			{
-				var name = ref[i].attributes.getNamedItem("id").value;
+				var nameComponent = ref[i].attributes.getNamedItem("id").value;
 
-				var comp = this.getComponentFromName(name);
+				//var comp = this.getComponentFromName(name);
+
+				/*console.log("Component " + name);
 
 				if(comp != null)
-				{
+				{	
 					c.components.push(comp);
+				}*/
+
+				for(var j = 0; j < components.length; j++)
+				{
+					var nameNewComponent = components[j].attributes.getNamedItem("id").value;
+
+					if(nameNewComponent == nameComponent)
+					{
+						c.components.push(this.processComponent(components[j], nameComponent, components));
+						break;
+					}
 				}
 
-				this.object.push(c);
+				//this.object.push(c);
 			}
 		}
 	}
+
+	return c;
 }
 
 MySceneGraph.prototype.processTransforms = function(component, c)
@@ -493,7 +516,7 @@ MySceneGraph.prototype.createNewPrimitive = function(name, c)
 		if(this.rectangleStrings[i] == name)
 		{
 			c.components.push(this.rectangle[i]);
-			this.object.push(c);
+			//this.object.push(c);
 		}
 	}
 
@@ -502,7 +525,7 @@ MySceneGraph.prototype.createNewPrimitive = function(name, c)
 		if(this.triangleStrings[i] == name)
 		{
 			c.components.push(this.triangle[i]);
-			this.object.push(c);
+			//this.object.push(c);
 		}
 	}
 
@@ -511,7 +534,7 @@ MySceneGraph.prototype.createNewPrimitive = function(name, c)
 		if(this.cylinderStrings[i] == name)
 		{
 			c.components.push(this.cylinder[i]);
-			this.object.push(c);
+			//this.object.push(c);
 		}
 	}
 
@@ -520,7 +543,7 @@ MySceneGraph.prototype.createNewPrimitive = function(name, c)
 		if(this.sphereStrings[i] == name)
 		{
 			c.components.push(this.sphere[i]);
-			this.object.push(c);
+			//this.object.push(c);
 		}
 	}
 
@@ -529,7 +552,7 @@ MySceneGraph.prototype.createNewPrimitive = function(name, c)
 		if(this.torusStrings[i] == name)
 		{
 			c.components.push(this.torus[i]);
-			this.object.push(c);
+			//this.object.push(c);
 		}
 	}
 }

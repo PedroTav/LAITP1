@@ -74,9 +74,10 @@ XMLscene.prototype.onGraphLoaded = function ()
 
     //Load components
 
-    this.component = this.graph.getRootElement();
+    this.component = this.graph.rootElement;
 
-    
+	console.log(this.graph.object.length);
+
 };
 
 XMLscene.prototype.display = function () {
