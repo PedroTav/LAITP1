@@ -735,8 +735,8 @@ MySceneGraph.prototype.getRootElement = function()
 		if(this.objectStrings[i] == this.rootID)
 		{
 			console.log(this.objectStrings[i]);
-			console.log(this.rooID);
-			this.root = this.object[i];
+			console.log(this.rootID);
+			return this.object[i];
 		}
 	}
 }

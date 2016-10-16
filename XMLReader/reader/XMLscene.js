@@ -22,7 +22,7 @@ XMLscene.prototype.init = function (application) {
 	this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
 
-    this.component = [];
+    this.component = new MyComponent(this);
 
 	this.axis=new CGFaxis(this);
 };
@@ -74,12 +74,9 @@ XMLscene.prototype.onGraphLoaded = function ()
 
     //Load components
 
-    this.graph.getRootElement();
+    this.component = this.graph.getRootElement();
 
-	for(var i = 0; i < this.graph.object.length; i++)
-    {
-    	this.component.push(this.graph.object[i]);
-    }
+    
 };
 
 XMLscene.prototype.display = function () {
@@ -116,12 +113,9 @@ XMLscene.prototype.display = function () {
 
 	// Displays
 
-	for(var i = 0; i < this.component.length; i++)
-	{
-		this.pushMatrix();
-		this.component[i].display();
-		this.popMatrix();
-	}
+	this.pushMatrix();
+	this.component.display();
+	this.popMatrix();
 
 };
 
