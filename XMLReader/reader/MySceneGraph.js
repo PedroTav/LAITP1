@@ -35,6 +35,8 @@ function MySceneGraph(filename, scene) {
 	this.transformations = [];
 	this.transformationsID = [];
 
+	this.lights = [];
+
 	/*
 	 * Read the contents of the xml file, and refer to this class for loading and error handlers.
 	 * After the file is read, the reader calls onXMLReady on this object.
@@ -80,6 +82,14 @@ MySceneGraph.prototype.onXMLReady=function()
 		this.onXMLError(error);
 		return;
 	}
+
+	error = this.parseLights(rootElement);
+
+	if (error != null) {
+		this.onXMLError(error);
+		return;
+	}
+
 	
 	error = this.parseTransformations(rootElement);
 
@@ -123,6 +133,7 @@ MySceneGraph.prototype.parseScene = function(rootElement) {
 
 	var scene = elems[0];
 	this.axisLength = scene.attributes.getNamedItem("axis_length").value;
+	this.rootID = scene.attributes.getNamedItem("root").value;
 
 	console.log("Scene element read");
 }
@@ -623,6 +634,111 @@ MySceneGraph.prototype.createTransform = function(t)
 
 	this.transformations.push(currT);
 	this.transformationsID.push(t.attributes.getNamedItem("id").value);
+}
+
+MySceneGraph.prototype.parseLights = function(rootElement)
+{
+	var elems =  rootElement.getElementsByTagName('lights');
+	if (elems == null) {
+		return "lights element is missing.";
+	}
+
+	if (elems.length != 1) {
+		return "either zero or more than one 'lights' element found.";
+	}
+
+	var lights = elems[0].children;
+
+	for(var i = 0; i < lights.length; i++)
+	{
+		this.processLight(lights[i]);
+	}
+
+	console.log("lights read");
+}
+
+MySceneGraph.prototype.processLight = function(light)
+{
+	var enabled = light.attributes.getNamedItem("enabled").value;
+
+	var location = light.getElementsByTagName("location");
+	var ambient = light.getElementsByTagName("ambient");
+	var diffuse = light.getElementsByTagName("diffuse");
+	var specular = light.getElementsByTagName("specular");
+
+	var ar = ambient[0].attributes.getNamedItem("r").value;
+	var ag = ambient[0].attributes.getNamedItem("g").value;
+	var ab = ambient[0].attributes.getNamedItem("b").value;
+	var aa = ambient[0].attributes.getNamedItem("a").value;
+
+	var dr = diffuse[0].attributes.getNamedItem("r").value;
+	var dg = diffuse[0].attributes.getNamedItem("g").value;
+	var db = diffuse[0].attributes.getNamedItem("b").value;
+	var da = diffuse[0].attributes.getNamedItem("a").value;
+
+	var sr = specular[0].attributes.getNamedItem("r").value;
+	var sg = specular[0].attributes.getNamedItem("g").value;
+	var sb = specular[0].attributes.getNamedItem("b").value;
+	var sa = specular[0].attributes.getNamedItem("a").value;
+
+	var newLight = new CGFlight(this.scene, this.lights.length);
+
+	if(light.nodeName == "omni")
+	{
+		var lx = location[0].attributes.getNamedItem("x").value;
+		var ly = location[0].attributes.getNamedItem("y").value;
+		var lz = location[0].attributes.getNamedItem("z").value;
+		var lw = location[0].attributes.getNamedItem("w").value;
+
+		newLight.setPosition(lx, ly, lz, lw);
+	}
+	else
+	{
+		if(light.nodeName == "spot")
+		{
+			var target = light.getElementsByTagName("target");
+
+			var lx = location[0].attributes.getNamedItem("x").value;
+			var ly = location[0].attributes.getNamedItem("y").value;
+			var lz = location[0].attributes.getNamedItem("z").value;
+
+			var tx = target[0].attributes.getNamedItem("x").value;
+			var ty = target[0].attributes.getNamedItem("y").value;
+			var tz = target[0].attributes.getNamedItem("z").value;
+
+			newLight.setPosition(lx, ly, lz, 1.0);
+			newLight.setSpotDirection(tx - lx, ty - ly, tz - lz);
+		}
+	}
+
+	newLight.setAmbient(ar, ag, ab, aa);
+	newLight.setDiffuse(dr, dg, db, da);
+	newLight.setSpecular(sr, sg, sb, sa);
+
+	newLight.setVisible(true);
+	newLight.disable();
+
+	if(enabled == 1)
+	{
+		newLight.enable();
+	}
+
+	newLight.update();
+
+	this.lights.push(newLight);
+}
+
+MySceneGraph.prototype.getRootElement = function()
+{
+	for(var i = 0; i < this.objectStrings.length; i++)
+	{
+		if(this.objectStrings[i] == this.rootID)
+		{
+			console.log(this.objectStrings[i]);
+			console.log(this.rooID);
+			this.root = this.object[i];
+		}
+	}
 }
 
 /*

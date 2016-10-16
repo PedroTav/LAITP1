@@ -22,12 +22,6 @@ XMLscene.prototype.init = function (application) {
 	this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
 
-    this.rectangle = [];
-    this.triangle = [];
-    this.cylinder = [];
-    this.sphere = [];
-    this.torus = [];
-
     this.component = [];
 
 	this.axis=new CGFaxis(this);
@@ -35,9 +29,9 @@ XMLscene.prototype.init = function (application) {
 
 XMLscene.prototype.initLights = function () {
 
-	this.lights[0].setPosition(2, 3, 3, 1);
+	/*this.lights[0].setPosition(2, 3, 3, 1);
     this.lights[0].setDiffuse(1.0,1.0,1.0,1.0);
-    this.lights[0].update();
+    this.lights[0].update();*/
 };
 
 XMLscene.prototype.initCameras = function () {
@@ -56,8 +50,8 @@ XMLscene.prototype.setDefaultAppearance = function () {
 XMLscene.prototype.onGraphLoaded = function () 
 {
 	this.gl.clearColor(this.graph.background[0],this.graph.background[1],this.graph.background[2],this.graph.background[3]);
-	this.lights[0].setVisible(true);
-    this.lights[0].enable();
+	/*this.lights[0].setVisible(true);
+    this.lights[0].enable();*/
     this.setAmbient(this.graph.illumination.ambient.r,this.graph.illumination.ambient.g,this.graph.illumination.ambient.b,this.graph.illumination.ambient.a);
 
     //Load Axis
@@ -71,45 +65,16 @@ XMLscene.prototype.onGraphLoaded = function ()
 
     this.interface.setActiveCamera(this.camera);
 
-    //Load Primites
-    //this.rectangle = new MyQuad(this, -0.5, -0.5, 0.5, 0.5);
+    //Load lights
 
-	//Load rectangles
-    
-    for(var i = 0; i < this.graph.rectangleID; i++)
+    for(var i = 0; i < this.graph.lights.length; i++)
     {
-    	this.rectangle[i] = this.graph.rectangle[i];
-    }
-
-	//Load Triangles
-
-    for(var i = 0; i < this.graph.triangleID; i++)
-    {
-    	this.triangle[i] = this.graph.triangle[i];
-    }
-
-	//Load Cylinders
-    
-    for(var i = 0; i < this.graph.cylinderID; i++)
-    {
-    	this.cylinder[i] = this.graph.cylinder[i];
-    }
-
-	//Load Spheres
-
-    for(var i = 0; i < this.graph.sphereID; i++)
-    {
-    	this.sphere[i] = this.graph.sphere[i];
-    }
-
-	//Load Torus
-    
-    for(var i = 0; i < this.graph.torusID; i++)
-    {
-    	this.torus[i] = this.graph.torus[i];
+    	this.lights.push(this.graph.lights[i]);
     }
 
     //Load components
+
+    this.graph.getRootElement();
 
 	for(var i = 0; i < this.graph.object.length; i++)
     {
@@ -143,18 +108,13 @@ XMLscene.prototype.display = function () {
 	// This is one possible way to do it
 	if (this.graph.loadedOk)
 	{
-		this.lights[0].update();
+		for(var i = 0; i < this.lights.length; i++)
+		{
+			this.lights[i].update();
+		}
 	};	
 
 	// Displays
-
-	//Display rectangles
-	/*for(var i = 0; i < this.rectangle.length; i++)
-	{
-		this.pushMatrix();
-		this.rectangle[i].display();
-		this.popMatrix();
-	}*/
 
 	for(var i = 0; i < this.component.length; i++)
 	{

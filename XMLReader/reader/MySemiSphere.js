@@ -29,8 +29,8 @@
  	var inc = (Math.PI/2)/this.stacks;
  	var inaux = 0; 
 	
-	console.log("inc " + inc);
-	console.log("incTotal " + inc*8);
+	/*console.log("inc " + inc);
+	console.log("incTotal " + inc*8);*/
 
 	this.vertices = [];
 	this.indices = [];
@@ -50,8 +50,6 @@
 		this.vertices.push(Math.cos(angle)*Math.cos(this.phy+f*inc+inc), Math.sin(angle)*Math.cos(this.phy+f*inc+inc),Math.sin(this.phy+(f+1)*inc));
 	
 	}
-
-
 
 
 

@@ -14,9 +14,7 @@ MyComponent.prototype.display = function()
 
     for(var i = 0; i < this.components.length; i++)
     {
-        this.scene.pushMatrix();
         this.components[i].display();
-        this.scene.popMatrix();
     }
 
     this.scene.popMatrix();
