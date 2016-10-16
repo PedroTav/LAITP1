@@ -24,6 +24,13 @@ XMLscene.prototype.init = function (application) {
 
     this.component = new MyComponent(this);
 
+    /*this.appearance = new CGFappearance(this);
+    this.appearance.loadTexture("textures/floor.png");*/
+
+    //this.quad = new MyQuad(this, 1, 2, 1, 2);
+
+    this.enableTextures(true);
+
 	this.axis=new CGFaxis(this);
 };
 
@@ -55,7 +62,7 @@ XMLscene.prototype.onGraphLoaded = function ()
     this.setAmbient(this.graph.illumination.ambient.r,this.graph.illumination.ambient.g,this.graph.illumination.ambient.b,this.graph.illumination.ambient.a);
 
     //Load Axis
-    this.axis.length = this.graph.axisLength;
+    this.axis = new CGFaxis(this, this.graph.axisLength);
 
     //Load Camera
 	var posFrom = [this.graph.camera.from.x, this.graph.camera.from.y, this.graph.camera.from.z];
@@ -75,9 +82,6 @@ XMLscene.prototype.onGraphLoaded = function ()
     //Load components
 
     this.component = this.graph.rootElement;
-
-	console.log(this.graph.object.length);
-
 };
 
 XMLscene.prototype.display = function () {
@@ -115,6 +119,9 @@ XMLscene.prototype.display = function () {
 	// Displays
 
 	this.pushMatrix();
+	/*this.translate(0, 0, -2);
+	this.appearance.apply();
+	this.quad.display();*/
 	this.component.display();
 	this.popMatrix();
 

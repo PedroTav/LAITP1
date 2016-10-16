@@ -5,6 +5,10 @@ function MyComponent(scene)
     this.components = [];
 
     this.transformations = [];
+
+    this.texture = new Texture(scene);
+
+    this.defaultAppearance = new CGFappearance(scene);
 }
 
 MyComponent.prototype.display = function()
@@ -14,7 +18,9 @@ MyComponent.prototype.display = function()
 
     for(var i = 0; i < this.components.length; i++)
     {
+        this.texture.applyTexture();
         this.components[i].display();
+        this.defaultAppearance.apply();
     }
 
     this.scene.popMatrix();

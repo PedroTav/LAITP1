@@ -37,6 +37,8 @@ function MySceneGraph(filename, scene) {
 
 	this.lights = [];
 
+	this.textures = [];
+
 	/*
 	 * Read the contents of the xml file, and refer to this class for loading and error handlers.
 	 * After the file is read, the reader calls onXMLReady on this object.
@@ -90,6 +92,12 @@ MySceneGraph.prototype.onXMLReady=function()
 		return;
 	}
 
+	error = this.parseTextures(rootElement);
+
+	if (error != null) {
+		this.onXMLError(error);
+		return;
+	}
 	
 	error = this.parseTransformations(rootElement);
 
@@ -357,7 +365,6 @@ MySceneGraph.prototype.parseComponents = function(rootElement)
 		{
 			this.rootElement = this.processComponent(components[i], name, components);
 		}
-		//this.processComponent(components[i]);
 	}
 
 	console.log("components read");
@@ -373,13 +380,9 @@ MySceneGraph.prototype.processComponent = function(component, name, components)
 
 	var ref = children[0].getElementsByTagName('primitiveref');
 
-	//this.objectStrings.push(component.attributes.getNamedItem("id").value);
-
 	if(ref != null && ref.length > 0)
 	{
 		var namePrimitive = ref[0].attributes.getNamedItem("id").value;
-
-		console.log("Primitive " + name);
 
 		this.createNewPrimitive(namePrimitive, c);
 	}
@@ -395,15 +398,6 @@ MySceneGraph.prototype.processComponent = function(component, name, components)
 			{
 				var nameComponent = ref[i].attributes.getNamedItem("id").value;
 
-				//var comp = this.getComponentFromName(name);
-
-				/*console.log("Component " + name);
-
-				if(comp != null)
-				{	
-					c.components.push(comp);
-				}*/
-
 				for(var j = 0; j < components.length; j++)
 				{
 					var nameNewComponent = components[j].attributes.getNamedItem("id").value;
@@ -414,10 +408,17 @@ MySceneGraph.prototype.processComponent = function(component, name, components)
 						break;
 					}
 				}
-
-				//this.object.push(c);
 			}
 		}
+	}
+
+	var texture = component.getElementsByTagName('texture');
+
+	var tID = texture[0].attributes.getNamedItem("id").value;
+
+	if(tID != "none")
+	{
+		c.texture = this.getTexture(tID);
 	}
 
 	return c;
@@ -760,6 +761,50 @@ MySceneGraph.prototype.getRootElement = function()
 			console.log(this.objectStrings[i]);
 			console.log(this.rootID);
 			return this.object[i];
+		}
+	}
+}
+
+MySceneGraph.prototype.parseTextures = function(rootElement)
+{
+	var elems =  rootElement.getElementsByTagName('textures');
+	if (elems == null) {
+		return "textures element is missing.";
+	}
+
+	if (elems.length != 1) {
+		return "either zero or more than one 'textures' element found.";
+	}
+
+	var textures = elems[0].children;
+
+	for(var i = 0; i < textures.length; i++)
+	{
+		this.processTexture(textures[i]);
+	}
+
+	console.log("textures read");
+}
+
+MySceneGraph.prototype.processTexture = function(texture)
+{
+	var id = texture.attributes.getNamedItem("id").value;
+	var filePath = texture.attributes.getNamedItem("file").value;
+	var length_s = texture.attributes.getNamedItem("length_s").value;
+	var length_t = texture.attributes.getNamedItem("length_t").value;
+
+	var tex = new Texture(this.scene, id, filePath, length_s, length_t);
+
+	this.textures.push(tex);
+}
+
+MySceneGraph.prototype.getTexture = function(id)
+{
+	for(var i = 0; i < this.textures.length; i++)
+	{
+		if(this.textures[i].id == id)
+		{
+			return this.textures[i];
 		}
 	}
 }
