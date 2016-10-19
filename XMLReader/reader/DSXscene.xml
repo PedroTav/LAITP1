@@ -90,12 +90,26 @@
     
         <!-- Deve existir um ou mais blocos "material" -->
         <!-- Os identificadores "id" nao podem ser repetidos -->
-        <material id="ss" >
-            <emission r="ff" g="ff" b="ff" a="ff" />
-            <ambient r="ff" g="ff" b="ff" a="ff" />
-            <diffuse r="ff" g="ff" b="ff" a="ff" />
-            <specular r="ff" g="ff" b="ff" a="ff" />
-            <shininess value="ff" />
+        <material id="material1" >
+            <emission r="0.0" g="0.0" b="0.0" a="1.0" />
+            <ambient r="0.0" g="0.0" b="0.0" a="1.0" />
+            <diffuse r="0.0" g="0.0" b="0.0" a="1.0" />
+            <specular r="0.0" g="0.0" b="0.0" a="1.0" />
+            <shininess value="1.0" />
+        </material>
+        <material id="material2" >
+            <emission r="1.0" g="0.0" b="0.0" a="1.0" />
+            <ambient r="1.0" g="0.0" b="0.0" a="1.0" />
+            <diffuse r="1.0" g="0.0" b="0.0" a="1.0" />
+            <specular r="1.0" g="0.0" b="0.0" a="1.0" />
+            <shininess value="0.0" />
+        </material>
+        <material id="material3" >
+            <emission r="1.0" g="1.0" b="0.0" a="1.0" />
+            <ambient r="1.0" g="1.0" b="0.0" a="1.0" />
+            <diffuse r="1.0" g="1.0" b="0.0" a="1.0" />
+            <specular r="1.0" g="1.0" b="0.0" a="1.0" />
+            <shininess value="0.0" />
         </material>
         
     </materials>
@@ -162,7 +176,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="floor" />
@@ -187,7 +201,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="lego" />
@@ -211,7 +225,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="lego" />
@@ -233,7 +247,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="lego" />
@@ -257,7 +271,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="lego" />
@@ -283,7 +297,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="lego" />
@@ -306,7 +320,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="none" />
@@ -335,7 +349,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="lego" />
@@ -358,7 +372,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="lego" />
@@ -381,7 +395,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="lego" />
@@ -404,7 +418,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="lego" />
@@ -427,7 +441,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="lego" />
@@ -450,7 +464,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="lego" />
@@ -473,7 +487,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="none" />
@@ -500,7 +514,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="wood1" />
@@ -522,7 +536,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="wood1" />
@@ -544,7 +558,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="wood1" />
@@ -566,7 +580,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="wood1" />
@@ -589,7 +603,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="none" />
@@ -616,7 +630,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="none" />
@@ -643,7 +657,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="none" />
@@ -676,7 +690,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="none" />
@@ -698,17 +712,21 @@
             
             <transformation>
             
-               <translate x="-1.0" y="2.0" z="-2.5" />
+               <translate x="-1.0" y="2.1" z="-2.5" />
                <rotate axis="x" angle="90" />
                <scale x="3" y="7" z="1" />
 			   
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="material1" />
+                <material id="material2" />
+                <material id="material3" />
             </materials>
                          
-            <texture id="wood3" />
+            <!-- <texture id="wood3" /> -->
+
+            <texture id="none" />
             
             <children>
             
@@ -730,7 +748,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="wood2" />
@@ -755,7 +773,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="wood2" />
@@ -780,7 +798,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="wood2" />
@@ -805,7 +823,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="wood2" />
@@ -829,7 +847,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="rug" />
@@ -851,7 +869,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="none" />
@@ -881,7 +899,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="wood2" />
@@ -906,7 +924,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="wood2" />
@@ -931,7 +949,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="wood2" />
@@ -956,7 +974,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="wood2" />
@@ -981,7 +999,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="wood2" />
@@ -1006,7 +1024,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="wood2" />
@@ -1031,7 +1049,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="wood2" />
@@ -1056,7 +1074,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="wallpaper" />
@@ -1080,7 +1098,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="wallpaper" />
@@ -1104,7 +1122,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="none" />
@@ -1129,7 +1147,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="none" />
@@ -1155,7 +1173,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="metal" />
@@ -1179,7 +1197,7 @@
             </transformation>
        
             <materials>
-                <material id="ss" />
+                <material id="none" />
             </materials>
                          
             <texture id="lamp" />

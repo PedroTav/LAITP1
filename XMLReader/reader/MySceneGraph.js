@@ -23,6 +23,8 @@ function MySceneGraph(filename, scene) {
 	this.sphereID = 0;
 	this.torusID = 0;
 
+	this.cameras = [];
+
 	this.rectangleStrings = [];
 	this.triangleStrings = [];
 	this.cylinderStrings = [];
@@ -38,6 +40,8 @@ function MySceneGraph(filename, scene) {
 	this.lights = [];
 
 	this.textures = [];
+
+	this.materials = [];
 
 	/*
 	 * Read the contents of the xml file, and refer to this class for loading and error handlers.
@@ -93,6 +97,13 @@ MySceneGraph.prototype.onXMLReady=function()
 	}
 
 	error = this.parseTextures(rootElement);
+
+	if (error != null) {
+		this.onXMLError(error);
+		return;
+	}
+
+	error = this.parseMaterials(rootElement);
 
 	if (error != null) {
 		this.onXMLError(error);
@@ -159,32 +170,46 @@ MySceneGraph.prototype.parseViews = function(rootElement)
 
 	var views = elems[0];
 
-	var perspective = views.children[0];
+	var perspective = views.children;
 
 	if(perspective == null || perspective.length == 0)
 	{
 		return "perspective is missing";
 	}
 
-	this.camera = new Camera();
+	for(var i = 0; i < perspective.length; i++)
+	{
+		this.processCamera(perspective[i]);
+	}
 
-	this.camera.near = perspective.attributes.getNamedItem("near").value;
-	this.camera.far = perspective.attributes.getNamedItem("far").value;
-	this.camera.angle = perspective.attributes.getNamedItem("angle").value*degToRad;
+	console.log("Cameras read");
+}
+
+MySceneGraph.prototype.processCamera = function(perspective)
+{
+	var near = this.reader.getFloat(perspective, "near", true);
+	var far = this.reader.getFloat(perspective, "far", true);
+	var angle = perspective.attributes.getNamedItem("angle").value*degToRad;
 
 	var from = perspective.children[0];
 
-	this.camera.from.x = from.attributes.getNamedItem("x").value;
-	this.camera.from.y = from.attributes.getNamedItem("y").value;
-	this.camera.from.z = from.attributes.getNamedItem("z").value;
+	var position = [];
+
+	position.push(from.attributes.getNamedItem("x").value);
+	position.push(from.attributes.getNamedItem("y").value);
+	position.push(from.attributes.getNamedItem("z").value);
 
 	var to = perspective.children[1];
 
-	this.camera.to.x = to.attributes.getNamedItem("x").value;
-	this.camera.to.y = to.attributes.getNamedItem("y").value;
-	this.camera.to.z = to.attributes.getNamedItem("z").value;
+	var target = [];
 
-	console.log("Cameras read");
+	target.push(to.attributes.getNamedItem("x").value);
+	target.push(to.attributes.getNamedItem("y").value);
+	target.push(to.attributes.getNamedItem("z").value);
+
+	var camera = new CGFcamera(angle, near, far, position, target);
+
+	this.cameras.push(camera);
 }
 
 MySceneGraph.prototype.parseIlumination = function(rootElement)
@@ -421,7 +446,31 @@ MySceneGraph.prototype.processComponent = function(component, name, components)
 		c.texture = this.getTexture(tID);
 	}
 
+	var material = component.getElementsByTagName("materials")[0].children;
+
+	for(var i = 0; i < material.length; i++)
+	{
+		var mID = material[i].attributes.getNamedItem("id").value;
+
+		if(mID != "none")
+		{
+			c.appearances.push(this.getMaterial(mID));
+			c.currAppearance++;
+		}
+	}
+
 	return c;
+}
+
+MySceneGraph.prototype.getMaterial = function(id)
+{
+	for(var i = 0; i < this.materials.length; i++)
+	{
+		if(this.materials[i].id == id)
+		{
+			return this.materials[i];
+		}
+	}
 }
 
 MySceneGraph.prototype.processTransforms = function(component, c)
@@ -807,6 +856,86 @@ MySceneGraph.prototype.getTexture = function(id)
 			return this.textures[i];
 		}
 	}
+}
+
+MySceneGraph.prototype.parseMaterials = function(rootElement)
+{
+	var elems =  rootElement.getElementsByTagName('materials');
+	if (elems == null) {
+		return "materials element is missing.";
+	}
+
+	var material = elems[0].children;
+
+	for(var i = 0; i < material.length; i++)
+	{
+		this.processMaterial(material[i]);
+	}
+
+	console.log("materials read");
+}
+
+MySceneGraph.prototype.processMaterial = function(material)
+{
+	var id = material.attributes.getNamedItem("id").value;
+
+	var emission = material.getElementsByTagName("emission");
+
+	var emiss = [-1, -1, -1, -1];
+	var ambi = [-1, -1, -1, -1];
+	var diff = [-1, -1, -1, -1];
+	var spec = [-1, -1, -1, -1];
+
+	var shin = -1;
+
+	if(emission != null)
+	{
+		emiss[0] = emission[0].attributes.getNamedItem("r").value;
+		emiss[1] = emission[0].attributes.getNamedItem("g").value;
+		emiss[2] = emission[0].attributes.getNamedItem("b").value;
+		emiss[3] = emission[0].attributes.getNamedItem("a").value;
+	}
+
+	var ambient = material.getElementsByTagName("ambient");
+
+	if(ambient != null)
+	{
+		ambi[0] = ambient[0].attributes.getNamedItem("r").value;
+		ambi[1] = ambient[0].attributes.getNamedItem("g").value;
+		ambi[2] = ambient[0].attributes.getNamedItem("b").value;
+		ambi[3] = ambient[0].attributes.getNamedItem("a").value;
+	}
+
+	var diffuse = material.getElementsByTagName("diffuse");
+
+	if(diffuse != null)
+	{
+		diff[0] = diffuse[0].attributes.getNamedItem("r").value;
+		diff[1] = diffuse[0].attributes.getNamedItem("g").value;
+		diff[2] = diffuse[0].attributes.getNamedItem("b").value;
+		diff[3] = diffuse[0].attributes.getNamedItem("a").value;
+	}
+	
+	var specular = material.getElementsByTagName("specular");
+
+	if(specular != null)
+	{
+		spec[0] = specular[0].attributes.getNamedItem("r").value;
+		spec[1] = specular[0].attributes.getNamedItem("g").value;
+		spec[2] = specular[0].attributes.getNamedItem("b").value;
+		spec[3] = specular[0].attributes.getNamedItem("a").value;
+	}
+	
+	var shininess = material.getElementsByTagName("shininess");
+
+	if(shininess != null)
+	{
+		shin = shininess[0].attributes.getNamedItem("value").value
+	}
+
+	var mater = new Material(this.scene, id, emiss, ambi, diff, spec);
+
+	this.materials.push(mater);
 }
 
 /*

@@ -8,8 +8,11 @@ function Texture(scene, id, filePath, length_s, length_t)
 
     this.filePath = filePath || "none"
 
+    this.textured = false;
+
     if(this.filePath != "none")
     {
+        this.textured = true;
         this.appearance.loadTexture(filePath);
     }
 
@@ -19,5 +22,8 @@ function Texture(scene, id, filePath, length_s, length_t)
 
 Texture.prototype.applyTexture = function()
 {
-    this.appearance.apply();
+    if(this.textured)
+    {
+        this.appearance.apply();
+    }
 }

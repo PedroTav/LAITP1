@@ -11,14 +11,14 @@ function getUrlVars() {
     return vars;
 }	 
 
-serialInclude(['../lib/CGF.js', 'XMLscene.js', 'MySceneGraph.js', 'Illumination.js', 'Camera.js', 'Color.js', 'Coords.js', 'MyQuad.js' ,'MyCylinder.js' , 'MyComponent.js', 'MyTransformation.js', 'MyFullTransform.js', 'MyTriangle.js', 'MyCylinderWithTops.js', 'MyCircle.js', 'MySphere.js', 'MySemiSphere.js', 'Texture.js',
+serialInclude(['../lib/CGF.js', 'XMLscene.js', 'MySceneGraph.js', 'Illumination.js', 'Camera.js', 'Color.js', 'Coords.js', 'MyQuad.js' ,'MyCylinder.js' , 'MyComponent.js', 'MyTransformation.js', 'MyFullTransform.js', 'MyTriangle.js', 'MyCylinderWithTops.js', 'MyCircle.js', 'MySphere.js', 'MySemiSphere.js', 'Texture.js', 'Material.js', 'MyInterface.js',
 
 main=function()
 {
 	// Standard application, scene and interface setup
     var app = new CGFapplication(document.body);
     var myScene = new XMLscene();
-    var myInterface = new CGFinterface();
+    var myInterface = new MyInterface();
 
     app.init();
 

@@ -29,6 +29,9 @@ XMLscene.prototype.init = function (application) {
 
     //this.quad = new MyQuad(this, 1, 2, 1, 2);
 
+    this.cameras = [];
+    this.currCamera = 0;
+
     this.enableTextures(true);
 
 	this.axis=new CGFaxis(this);
@@ -65,10 +68,18 @@ XMLscene.prototype.onGraphLoaded = function ()
     this.axis = new CGFaxis(this, this.graph.axisLength);
 
     //Load Camera
-	var posFrom = [this.graph.camera.from.x, this.graph.camera.from.y, this.graph.camera.from.z];
-	var posTo = [this.graph.camera.to.x, this.graph.camera.to.y, this.graph.camera.to.z]
 
-    this.camera = new CGFcamera(this.graph.camera.angle, this.camera.near, this.camera.far, posFrom, posTo);
+    console.log(this.graph.cameras);
+
+	for(var i = 0; i < this.graph.cameras.length; i++)
+	{
+		this.cameras.push(this.graph.cameras[i]);
+	}
+
+	console.log(this.cameras[this.currCamera].near);
+	console.log(this.cameras[this.currCamera].far);
+
+	this.camera = this.cameras[this.currCamera];
 
     this.interface.setActiveCamera(this.camera);
 
@@ -130,4 +141,20 @@ XMLscene.prototype.display = function () {
 XMLscene.prototype.setInterface = function(interface)
 {
 	this.interface = interface;
+}
+
+XMLscene.prototype.updateCameras = function()
+{
+	if(this.currCamera == this.cameras.length - 1)
+	{
+		this.currCamera = 0;
+	}
+	else
+	{
+		this.currCamera++;
+	}
+
+	this.camera = this.cameras[this.currCamera];
+
+	this.interface.setActiveCamera(this.camera);
 }
