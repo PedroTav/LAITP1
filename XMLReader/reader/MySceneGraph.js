@@ -38,6 +38,7 @@ function MySceneGraph(filename, scene) {
 	this.transformationsID = [];
 
 	this.lights = [];
+	this.lightsBool = [];
 
 	this.textures = [];
 
@@ -442,8 +443,15 @@ MySceneGraph.prototype.processComponent = function(component, name, components)
 	var tID = texture[0].attributes.getNamedItem("id").value;
 
 	if(tID != "none")
-	{
-		c.texture = this.getTexture(tID);
+	{	
+		c.tID = tID;
+
+		if(tID != "inherit")
+		{
+			c.texture = this.getTexture(tID);
+		}
+
+		c.checkInheritance();
 	}
 
 	var material = component.getElementsByTagName("materials")[0].children;
@@ -793,7 +801,12 @@ MySceneGraph.prototype.processLight = function(light)
 
 	if(enabled == 1)
 	{
+		this.lightsBool.push(true);
 		newLight.enable();
+	}
+	else
+	{
+		this.lightsBool.push(false);
 	}
 
 	newLight.update();

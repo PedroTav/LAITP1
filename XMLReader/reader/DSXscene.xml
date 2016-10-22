@@ -693,7 +693,7 @@
                 <material id="none" />
             </materials>
                          
-            <texture id="none" />
+            <texture id="wood2" />
             
             <children>
             
@@ -719,14 +719,14 @@
             </transformation>
        
             <materials>
-                <material id="material1" />
-                <material id="material2" />
-                <material id="material3" />
+                <material id="none" />
+                <material id="none" />
+                <material id="none" />
             </materials>
                          
             <!-- <texture id="wood3" /> -->
 
-            <texture id="none" />
+            <texture id="inherit" />
             
             <children>
             

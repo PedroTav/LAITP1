@@ -11,7 +11,13 @@ function MyTriangle(scene, x1, x2, x3, y1, y2, y3, z1, z2, z3) {
     this.z2 = z2;
     this.z3 = z3;
 
-    
+    this.a = Math.sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) + (z2-z1)*(z2-z1));
+    this.b = Math.sqrt((x2-x3)*(x2-x3) + (y2-y3)*(y2-y3) + (z2-z3)*(z2-z3));
+    this.c = Math.sqrt((x1-x3)*(x1-x3) + (y1-y3)*(y1-y3) + (z1-z3)*(z1-z3));
+
+    this.cosA = (-this.b*this.b + this.c*this.c + this.a*this.a)/(2*this.c*this.a);
+    this.cosB = (this.b*this.b + -this.c*this.c + this.a*this.a)/(2*this.b*this.a);
+    this.cosC = (this.b*this.b + this.c*this.c - this.a*this.a)/(2*this.b*this.c);
     
  	this.initBuffers();
  };
@@ -35,6 +41,12 @@ function MyTriangle(scene, x1, x2, x3, y1, y2, y3, z1, z2, z3) {
     0, 0, 1,
     0, 0, 1,
     0, 0, 1,
+    ]
+
+    this.texCoords = [
+    0, 0,
+    this.a, 0,
+    this.a - this.b*this.cosB, this.a*Math.sqrt(1 - (this.cosB*this.cosB))
     ]
     
     this.primitiveType = this.scene.gl.TRIANGLES;

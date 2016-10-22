@@ -29,6 +29,21 @@ XMLscene.prototype.init = function (application) {
 
     //this.quad = new MyQuad(this, 1, 2, 1, 2);
 
+    this.bool = true;
+
+    this.booleans = [];
+
+	this.booleans.push(true);
+	this.booleans.push(true);
+	this.booleans.push(true);
+
+    this.lightsBool = [];
+
+    for(var i = 0; i < this.lights.length; i++)
+    {
+    	this.lightsBool.push(false);
+    }
+
     this.cameras = [];
     this.currCamera = 0;
 
@@ -88,6 +103,7 @@ XMLscene.prototype.onGraphLoaded = function ()
     for(var i = 0; i < this.graph.lights.length; i++)
     {
     	this.lights.push(this.graph.lights[i]);
+    	this.lightsBool.push(this.graph.lightsBool);
     }
 
     //Load components

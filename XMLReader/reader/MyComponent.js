@@ -12,6 +12,8 @@ function MyComponent(scene)
     this.appearances.push(new Material(scene));
     this.currAppearance = 0;
 
+    this.tID = "none";
+
     this.defaultAppearance = new CGFappearance(scene);
 }
 
@@ -68,6 +70,17 @@ MyComponent.prototype.updateMaterials = function()
         if(this.components[i] instanceof MyComponent)
         {
             this.components[i].updateMaterials();
+        }
+    }
+}
+
+MyComponent.prototype.checkInheritance = function()
+{
+    for(var i = 0; i < this.components.length; i++)
+    {
+        if(this.components[i] instanceof MyComponent && this.components[i].tID == "inherit")
+        {
+            this.components[i].texture = this.texture;
         }
     }
 }
