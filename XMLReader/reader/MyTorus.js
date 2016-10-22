@@ -1,9 +1,19 @@
-function MyTorus(scene, slices, inner, outer, loops) {
+function MyTorus(scene, iRadius, oRadius, nsides, rings) {
  	CGFobject.call(this,scene);
 	
-	this.slices = slices;
-	this.stacks = stacks;
-	this.phy = 0;
+	this.iR = iRadius;
+	this.oR = oRadius;
+		
+	this.nsides = nsides;
+	this.rings = rings;
+
+	this.incT = 2*Math.PI/this.nsides;
+	this.incF = 2*Math.PI/this.rings
+
+	console.log(this.iR);
+	console.log(this.oR);
+	console.log(this.nsides);
+	console.log(this.rings);
 
  	this.initBuffers();
  };
@@ -12,8 +22,106 @@ function MyTorus(scene, slices, inner, outer, loops) {
  MyTorus.prototype.constructor = MyTorus;
 
  MyTorus.prototype.initBuffers = function() {
-    this.vertices = [];
+ 	/*
+ 	* TODO:
+ 	* Replace the following lines in order to build a prism with a **single mesh**.
+ 	*
+ 	* How can the vertices, indices and normals arrays be defined to
+ 	* build a prism with varying number of nsides and stacks?
+ 	*/
+	var degToRad = Math.PI / 180.0;
+ 	var angle = 0;
+ 	var incAngle = 2*Math.PI / this.nsides;
+ 	var inaux = 0; 
+
+	this.vertices = [];
 	this.indices = [];
 	this.normals = [];
 	this.texCoords = [];
+
+	var varS = 0;
+	var varT = 0;
+	var incST = 1.0 / this.nsides;
+	
+ for(var f = 0; f < Math.PI*2 ; f += this.incF){
+
+	var angle = 0;
+ 
+ 	//this.vertices = [];
+	for(var i = 0; i < Math.PI*2; i += this.incT) {
+		this.vertices.push((this.oR + this.iR*Math.cos(i))*Math.cos(f), this.iR*Math.sin(i), (this.oR + this.iR*Math.cos(i))*Math.sin(f));
+		f += this.incF;
+		this.vertices.push((this.oR + this.iR*Math.cos(i))*Math.cos(f), this.iR*Math.sin(i), (this.oR + this.iR*Math.cos(i))*Math.sin(f));
+		f -= this.incF;
+		i += this.incT;
+		this.vertices.push((this.oR + this.iR*Math.cos(i))*Math.cos(f), this.iR*Math.sin(i), (this.oR + this.iR*Math.cos(i))*Math.sin(f));
+		f += this.incF;
+		this.vertices.push((this.oR + this.iR*Math.cos(i))*Math.cos(f), this.iR*Math.sin(i), (this.oR + this.iR*Math.cos(i))*Math.sin(f));
+		i -= this.incT;
+		f -= this.incF;
+	}
+
+
+
+
+// 	this.indices = [];
+ 	
+	for(var i = 0; i < this.nsides; i++) {
+		this.indices.push(i*4+0+inaux,i*4+2+inaux,i*4+1+inaux);
+	}
+	for(var i = 0; i < this.nsides; i++) {
+		this.indices.push(i*4+3+inaux,i*4+1+inaux,i*4+2+inaux);
+	}
+
+	angle = 0;
+	angle_next = 0;
+
+ 	//this.normals = [];
+	for(var i = 0; i < Math.PI*2; i += this.incT) {
+		this.normals.push((this.oR + this.iR*Math.cos(i))*Math.cos(f), this.iR*Math.sin(i), (this.oR + this.iR*Math.cos(i))*Math.sin(f));
+		f += this.incF;
+		this.normals.push((this.oR + this.iR*Math.cos(i))*Math.cos(f), this.iR*Math.sin(i), (this.oR + this.iR*Math.cos(i))*Math.sin(f));
+		f -= this.incF;
+		i += this.incT;
+		this.normals.push((this.oR + this.iR*Math.cos(i))*Math.cos(f), this.iR*Math.sin(i), (this.oR + this.iR*Math.cos(i))*Math.sin(f));
+		f += this.incF;
+		this.normals.push((this.oR + this.iR*Math.cos(i))*Math.cos(f), this.iR*Math.sin(i), (this.oR + this.iR*Math.cos(i))*Math.sin(f));
+		i -= this.incT;
+		f -= this.incF;
+	}
+
+
+
+	angle = 0;
+	angle_next = 0;
+
+	//this.texCoords.push(0.5 , 0.5);
+	
+	//this.texCoords = [];
+ 	for(var i = 0; i < this.nsides; i++) {
+
+		this.texCoords.push(varS, varT);
+		this.texCoords.push(varS, varT);
+		varS += incST;
+		this.texCoords.push(varS, varT);
+		this.texCoords.push(varS, varT);
+
+    }
+	varT += incST;
+	varS = 0;
+
+	inaux += this.nsides * 4;
  }
+
+ console.log(this.vertices);
+ console.log(this.indices);
+ console.log(this.normals);
+
+ console.log(this.vertices.length);
+ console.log(this.indices.length);
+ console.log(this.normals.length);
+
+ 	this.primitiveType = this.scene.gl.TRIANGLES;
+ 	this.initGLBuffers();
+
+}

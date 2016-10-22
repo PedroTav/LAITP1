@@ -366,7 +366,15 @@ MySceneGraph.prototype.processSphere= function(type, name)
 
 MySceneGraph.prototype.processTorus= function(type, name)
 {
+	var inner = this.reader.getFloat(type, "inner", true);
+	var outer = this.reader.getFloat(type, "outer", true);
+	var slices = this.reader.getFloat(type, "slices", true);
+	var loops = this.reader.getFloat(type, "loops", true);
 
+	this.torus[this.torusID] = new MyTorus(this.scene, inner, outer, slices, loops);
+	this.torusStrings[this.torusID] = name;
+	console.log(this.torus[this.torusID]);
+	this.torusID++;
 }
 
 MySceneGraph.prototype.parseComponents = function(rootElement)
