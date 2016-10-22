@@ -23,7 +23,7 @@ MyInterface.prototype.init = function(application) {
 	// init GUI. For more information on the methods, check:
 	//  http://workshop.chromeexperiments.com/examples/gui
 
-	/*this.gui = new dat.GUI();
+	this.gui = new dat.GUI();
 
 	// add a button:
 	// the first parameter is the object that is being controlled (in this case the scene)
@@ -32,16 +32,51 @@ MyInterface.prototype.init = function(application) {
 
 	// add a group of controls (and open/expand by defult)
 
-	var luzes = this.gui.addFolder("Luzes");
-	luzes.open();
+	this.luzes = this.gui.addFolder("Luzes");
+	this.luzes.open();
+
+	//luzes.add(this.scene, 'light1');
+
+
+
+	console.dir(this.scene.lights);
+
+	console.dir(this.scene);
+
+console.log('d1');
+	console.log(this.scene.lightsBool);
+console.log('d2');
+	var lightNames = Object.keys(this.scene.lightsBool);
+
+	console.log(lightNames);
+
+	this.bool = true;
+
+	for (var i = 0; i < lightNames.length; i++) {
+		console.log("asd");
+		luzes.add(this.scene.lightsBool, lightNames[i]);
+	}
+// 	for (var i = 0; i < this.scene.lightsBool.length; i++) {
+// 		luzes.add(this.scene.lightsBool, i);
+// 	}
+// 	for (var i = 0; i < this.scene.lightsBool.length; i++) {
+// 		luzes.add(this.scene.lightsBool, i);
+// 	}
+// 	var i = 0;
+
+
+// 	this.scene.lightsBool.forEach(function(light){
+// 		luzes.add(this.scene, this.i);
+// 		this.i++;
+// 	})
 
 	//luzes.add(this.scene, 'bool');
 
-	for(var i = 0; i < this.scene.booleans.length; i++)
+	/*for(var i = 0; i < this.scene.booleans.length; i++)
 	{
 		var string = 'booleans[' + i + ']';
 		luzes.add(this.scene, string);
-	}
+	}*/
 
 	/*for(var i = 0; i < this.scene.lights.length; i++)
 	{
@@ -55,7 +90,7 @@ MyInterface.prototype.init = function(application) {
 	// add a slider
 	// must be a numeric variable of the scene, initialized in scene.init e.g.
 	// this.speed=3;
-	// min and max values can be specified as parameters*/
+	// min and max values can be specified as parameters
 
 	return true;
 };
@@ -91,3 +126,20 @@ MyInterface.prototype.processKeyboard = function(event) {
 			break;
 	};
 };
+
+MyInterface.prototype.update = function()
+{
+	if(this.bool)
+	{
+		var lightNames = Object.keys(this.scene.lightsBool);
+		
+		for (var i = 0; i < lightNames.length; i++) {
+			this.luzes.add(this.scene.lightsBool, lightNames[i]);
+		}
+
+		if(lightNames.length > 0)
+		{
+			this.bool = false;
+		}
+	}
+}

@@ -38,7 +38,8 @@ function MySceneGraph(filename, scene) {
 	this.transformationsID = [];
 
 	this.lights = [];
-	this.lightsBool = [];
+	this.lightsBool = {};
+	this.lightsID = [];
 
 	this.textures = [];
 
@@ -740,6 +741,7 @@ MySceneGraph.prototype.parseLights = function(rootElement)
 
 MySceneGraph.prototype.processLight = function(light)
 {
+	var id = light.attributes.getNamedItem("id").value;
 	var enabled = light.attributes.getNamedItem("enabled").value;
 
 	var location = light.getElementsByTagName("location");
@@ -799,14 +801,16 @@ MySceneGraph.prototype.processLight = function(light)
 	newLight.setVisible(true);
 	newLight.disable();
 
+	this.lightsID.push(id);
+
 	if(enabled == 1)
 	{
-		this.lightsBool.push(true);
+		this.lightsBool[id] = true;
 		newLight.enable();
 	}
 	else
 	{
-		this.lightsBool.push(false);
+		this.lightsBool[id] = false;
 	}
 
 	newLight.update();

@@ -37,12 +37,20 @@ XMLscene.prototype.init = function (application) {
 	this.booleans.push(true);
 	this.booleans.push(true);
 
-    this.lightsBool = [];
+	this.lightsID = [];
 
-    for(var i = 0; i < this.lights.length; i++)
-    {
-    	this.lightsBool.push(false);
-    }
+//     this.lightsBool = [];
+
+//     for(var i = 0; i < this.lights.length; i++)
+//     {
+//     	this.lightsBool.push(false);
+//     }
+	this.lightsBool = {};
+
+//     for(var i = 0; i < this.lights.length; i++)
+//     {
+//     	this.lightsBool['light' + i] = false;
+//     }
 
     this.cameras = [];
     this.currCamera = 0;
@@ -103,7 +111,8 @@ XMLscene.prototype.onGraphLoaded = function ()
     for(var i = 0; i < this.graph.lights.length; i++)
     {
     	this.lights.push(this.graph.lights[i]);
-    	this.lightsBool.push(this.graph.lightsBool);
+    	this.lightsID.push(this.graph.lightsID[i]);
+    	this.lightsBool[this.lightsID[i]] = this.graph.lightsBool[this.lightsID[i]];
     }
 
     //Load components
@@ -143,10 +152,12 @@ XMLscene.prototype.display = function () {
 		}
 	};	
 
+	this.updateLights();
+
 	// Displays
 
 	this.pushMatrix();
-	/*this.translate(0, 0, -2);
+	/*this.translate(0, 0, 2);
 	this.appearance.apply();
 	this.quad.display();*/
 	this.component.display();
@@ -173,4 +184,21 @@ XMLscene.prototype.updateCameras = function()
 	this.camera = this.cameras[this.currCamera];
 
 	this.interface.setActiveCamera(this.camera);
+}
+
+XMLscene.prototype.updateLights = function()
+{
+	for(var i = 0; i < this.lightsID.length; i++)
+	{
+		if(this.lightsBool[this.lightsID[i]] == true)
+		{
+			this.lights[i].enable();
+		}
+		else
+		{
+			this.lights[i].disable();
+		}
+
+		this.lights[i].update();
+	}
 }
