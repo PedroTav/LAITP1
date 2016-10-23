@@ -65,10 +65,7 @@
 		this.indices.push(i*4+0+inaux,i*4+1+inaux,i*4+2+inaux);
 		//this.indices.push(3,2,1);
 	}
-
 	
-
-
 	//angle = 0;
 	//angle_next = 0;
 
@@ -90,6 +87,50 @@
 		angle += incAngle;
 		this.texCoords.push(-(Math.cos(angle)*Math.cos(this.phy+f*inc) * 0.5 + 0.5) +1, Math.sin(angle)*Math.cos(this.phy+f*inc) * 0.5 + 0.5);
 		this.texCoords.push(-(Math.cos(angle)*Math.cos(this.phy+f*inc+inc) * 0.5 + 0.5) +1, Math.sin(angle)*Math.cos(this.phy+f*inc+inc) * 0.5 + 0.5);
+
+    }
+
+
+	inaux += this.slices * 4;
+
+	for(var i = 0; i <= this.slices; i++) {
+		this.vertices.push(Math.cos(angle)*Math.cos(this.phy-f*inc), Math.sin(angle)*Math.cos(this.phy-f*inc),Math.sin(this.phy-f*inc));
+		this.vertices.push(Math.cos(angle)*Math.cos(this.phy-f*inc+inc), Math.sin(angle)*Math.cos(this.phy-f*inc+inc),Math.sin(this.phy-(f+1)*inc));
+		angle += incAngle;
+		this.vertices.push(Math.cos(angle)*Math.cos(this.phy-f*inc), Math.sin(angle)*Math.cos(this.phy-f*inc),Math.sin(this.phy+f*inc));
+		this.vertices.push(Math.cos(angle)*Math.cos(this.phy-f*inc+inc), Math.sin(angle)*Math.cos(this.phy-f*inc+inc),Math.sin(this.phy-(f+1)*inc));
+	
+	}
+
+	
+	for(var i = 0; i < this.slices; i++) {
+		this.indices.push(i*4+1+inaux,i*4+2+inaux,i*4+3+inaux);
+		this.indices.push(i*4+3+inaux,i*4+2+inaux,i*4+1+inaux);
+	
+	}
+	for(var i = 0; i < this.slices; i++) {
+		this.indices.push(i*4+2+inaux,i*4+1+inaux,i*4+0+inaux);
+		this.indices.push(i*4+0+inaux,i*4+1+inaux,i*4+2+inaux);
+		
+	}
+
+
+	for(var i= 0; i <= this.slices; i++) {
+		this.normals.push(Math.cos(angle)*Math.cos(this.phy-f*inc), Math.sin(angle)*Math.cos(this.phy-f*inc),Math.sin(this.phy-f*inc));
+		this.normals.push(Math.cos(angle)*Math.cos(this.phy-f*inc+inc), Math.sin(angle)*Math.cos(this.phy-f*inc+inc),Math.sin(this.phy-(f+1)*inc));
+		angle += incAngle;
+		this.normals.push(Math.cos(angle)*Math.cos(this.phy-f*inc), Math.sin(angle)*Math.cos(this.phy-f*inc),Math.sin(this.phy-f*inc));
+		this.normals.push(Math.cos(angle)*Math.cos(this.phy-f*inc+inc), Math.sin(angle)*Math.cos(this.phy-f*inc+inc),Math.sin(this.phy-(f+1)*inc));
+
+	}
+
+	for(var i = 0; i < this.slices; i++) {
+
+		this.texCoords.push(-(Math.cos(angle)*Math.cos(this.phy-f*inc) * 0.5 + 0.5) +1, Math.sin(angle)*Math.cos(this.phy-f*inc) * 0.5 + 0.5);
+		this.texCoords.push(-(Math.cos(angle)*Math.cos(this.phy-f*inc+inc) * 0.5 + 0.5) +1, Math.sin(angle)*Math.cos(this.phy-f*inc+inc) * 0.5 + 0.5);
+		angle += incAngle;
+		this.texCoords.push(-(Math.cos(angle)*Math.cos(this.phy-f*inc) * 0.5 + 0.5) +1, Math.sin(angle)*Math.cos(this.phy-f*inc) * 0.5 + 0.5);
+		this.texCoords.push(-(Math.cos(angle)*Math.cos(this.phy-f*inc+inc) * 0.5 + 0.5) +1, Math.sin(angle)*Math.cos(this.phy-f*inc+inc) * 0.5 + 0.5);
 
     }
 
