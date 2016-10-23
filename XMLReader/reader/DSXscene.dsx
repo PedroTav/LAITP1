@@ -18,6 +18,10 @@
             <from x="10.0" y="10.0" z="10.0" />
             <to x="0.0" y="0.0" z="-4.0" />
         </perspective>
+        <perspective id="camera2" near="0.1" far="500.0" angle="60.0">
+            <from x="40.0" y="40.0" z="40.0" />
+            <to x="0.0" y="0.0" z="-4.0" />
+        </perspective>
         
     </views>
     
@@ -688,7 +692,6 @@
 				<componentref id="wall5" />
 				<componentref id="lamp1" />
 				<componentref id="lamp2" />
-				<componentref id="torusC" />
 				
             </children>
             

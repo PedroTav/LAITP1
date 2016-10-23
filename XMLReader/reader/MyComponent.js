@@ -13,6 +13,7 @@ function MyComponent(scene)
     this.currAppearance = 0;
 
     this.tID = "none";
+    this.mID = [];
 
     this.defaultAppearance = new CGFappearance(scene);
 }
@@ -24,8 +25,30 @@ MyComponent.prototype.display = function()
 
     for(var i = 0; i < this.components.length; i++)
     {
-        this.texture.applyTexture();
-        this.appearances[this.currAppearance].applyMaterial();
+        if(this.components[i] instanceof MyComponent)
+        {
+            if(this.components[i].tID != "none")
+            {
+                this.texture.applyTexture();
+            }
+        }
+        else
+        {
+            this.texture.applyTexture();
+        }
+
+        if(this.components[i] instanceof MyComponent)
+        {
+            if(this.components[i].mID[this.components[i].currAppearance] != "none")
+            {
+                this.appearances[this.currAppearance].applyMaterial();
+            }
+        }
+        else
+        {
+            this.appearances[this.currAppearance].applyMaterial();
+        }
+
         this.components[i].display();
         this.defaultAppearance.apply();
     }
@@ -81,6 +104,24 @@ MyComponent.prototype.checkInheritance = function()
         if(this.components[i] instanceof MyComponent && this.components[i].tID == "inherit")
         {
             this.components[i].texture = this.texture;
+        }
+    }
+}
+
+MyComponent.prototype.checkInheritanceMaterial = function()
+{
+    for(var i = 0; i < this.components.length; i++)
+    {
+        if(this.components[i] instanceof MyComponent)
+        {
+            for(var j = 0; j < this.components[i].mID.length; j++)
+            {
+                if(this.components[i].mID[j] == "inherit")
+                {
+                    this.components[i].appearances.push(this.appearances[0]);
+                    this.components[i].currAppearance++;
+                }
+            }
         }
     }
 }

@@ -373,7 +373,6 @@ MySceneGraph.prototype.processTorus= function(type, name)
 
 	this.torus[this.torusID] = new MyTorus(this.scene, inner, outer, slices, loops);
 	this.torusStrings[this.torusID] = name;
-	console.log(this.torus[this.torusID]);
 	this.torusID++;
 }
 
@@ -392,14 +391,22 @@ MySceneGraph.prototype.parseComponents = function(rootElement)
 
 	var cLength = components.length;
 
+	var flag = 0;
+
 	for(var i = 0; i < cLength; i++)
 	{
 		var name = components[i].attributes.getNamedItem("id").value;
 
 		if(name == this.rootID)
 		{
+			flag = 1;
 			this.rootElement = this.processComponent(components[i], name, components);
 		}
+	}
+
+	if(!flag)
+	{
+		console.log("root element not defined");
 	}
 
 	console.log("components read");
@@ -471,10 +478,17 @@ MySceneGraph.prototype.processComponent = function(component, name, components)
 
 		if(mID != "none")
 		{
-			c.appearances.push(this.getMaterial(mID));
-			c.currAppearance++;
+			c.mID.push(mID);
+
+			if(mID != "inherit")
+			{
+				c.appearances.push(this.getMaterial(mID));
+				c.currAppearance++;
+			}
 		}
 	}
+
+	c.checkInheritanceMaterial();
 
 	return c;
 }
@@ -832,8 +846,6 @@ MySceneGraph.prototype.getRootElement = function()
 	{
 		if(this.objectStrings[i] == this.rootID)
 		{
-			console.log(this.objectStrings[i]);
-			console.log(this.rootID);
 			return this.object[i];
 		}
 	}
@@ -915,47 +927,47 @@ MySceneGraph.prototype.processMaterial = function(material)
 
 	if(emission != null)
 	{
-		emiss[0] = emission[0].attributes.getNamedItem("r").value;
-		emiss[1] = emission[0].attributes.getNamedItem("g").value;
-		emiss[2] = emission[0].attributes.getNamedItem("b").value;
-		emiss[3] = emission[0].attributes.getNamedItem("a").value;
+		emiss[0] = this.reader.getFloat(emission[0], "r", true);
+		emiss[1] = this.reader.getFloat(emission[0], "g", true);
+		emiss[2] = this.reader.getFloat(emission[0], "b", true);
+		emiss[3] = this.reader.getFloat(emission[0], "a", true);
 	}
 
 	var ambient = material.getElementsByTagName("ambient");
 
 	if(ambient != null)
 	{
-		ambi[0] = ambient[0].attributes.getNamedItem("r").value;
-		ambi[1] = ambient[0].attributes.getNamedItem("g").value;
-		ambi[2] = ambient[0].attributes.getNamedItem("b").value;
-		ambi[3] = ambient[0].attributes.getNamedItem("a").value;
+		ambi[0] = this.reader.getFloat(ambient[0], "r", true);
+		ambi[1] = this.reader.getFloat(ambient[0], "g", true);
+		ambi[2] = this.reader.getFloat(ambient[0], "b", true);
+		ambi[3] = this.reader.getFloat(ambient[0], "a", true);
 	}
 
 	var diffuse = material.getElementsByTagName("diffuse");
 
 	if(diffuse != null)
 	{
-		diff[0] = diffuse[0].attributes.getNamedItem("r").value;
-		diff[1] = diffuse[0].attributes.getNamedItem("g").value;
-		diff[2] = diffuse[0].attributes.getNamedItem("b").value;
-		diff[3] = diffuse[0].attributes.getNamedItem("a").value;
+		diff[0] = this.reader.getFloat(diffuse[0], "r", true);
+		diff[1] = this.reader.getFloat(diffuse[0], "g", true);
+		diff[2] = this.reader.getFloat(diffuse[0], "b", true);
+		diff[3] = this.reader.getFloat(diffuse[0], "a", true);
 	}
 	
 	var specular = material.getElementsByTagName("specular");
 
 	if(specular != null)
 	{
-		spec[0] = specular[0].attributes.getNamedItem("r").value;
-		spec[1] = specular[0].attributes.getNamedItem("g").value;
-		spec[2] = specular[0].attributes.getNamedItem("b").value;
-		spec[3] = specular[0].attributes.getNamedItem("a").value;
+		spec[0] = this.reader.getFloat(specular[0], "r", true);
+		spec[1] = this.reader.getFloat(specular[0], "g", true);
+		spec[2] = this.reader.getFloat(specular[0], "b", true);
+		spec[3] = this.reader.getFloat(specular[0], "a", true);
 	}
 	
 	var shininess = material.getElementsByTagName("shininess");
 
 	if(shininess != null)
 	{
-		shin = shininess[0].attributes.getNamedItem("value").value
+		shin = this.reader.getFloat(shininess[0], "value", true);
 	}
 
 	var mater = new Material(this.scene, id, emiss, ambi, diff, spec);

@@ -92,15 +92,10 @@ XMLscene.prototype.onGraphLoaded = function ()
 
     //Load Camera
 
-    console.log(this.graph.cameras);
-
 	for(var i = 0; i < this.graph.cameras.length; i++)
 	{
 		this.cameras.push(this.graph.cameras[i]);
 	}
-
-	console.log(this.cameras[this.currCamera].near);
-	console.log(this.cameras[this.currCamera].far);
 
 	this.camera = this.cameras[this.currCamera];
 

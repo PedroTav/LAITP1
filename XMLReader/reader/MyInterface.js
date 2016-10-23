@@ -36,24 +36,12 @@ MyInterface.prototype.init = function(application) {
 	this.luzes.open();
 
 	//luzes.add(this.scene, 'light1');
-
-
-
-	console.dir(this.scene.lights);
-
-	console.dir(this.scene);
-
-console.log('d1');
-	console.log(this.scene.lightsBool);
-console.log('d2');
+	
 	var lightNames = Object.keys(this.scene.lightsBool);
-
-	console.log(lightNames);
 
 	this.bool = true;
 
 	for (var i = 0; i < lightNames.length; i++) {
-		console.log("asd");
 		luzes.add(this.scene.lightsBool, lightNames[i]);
 	}
 // 	for (var i = 0; i < this.scene.lightsBool.length; i++) {

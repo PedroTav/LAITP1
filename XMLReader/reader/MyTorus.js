@@ -10,11 +10,6 @@ function MyTorus(scene, iRadius, oRadius, nsides, rings) {
 	this.incT = 2*Math.PI/this.nsides;
 	this.incF = 2*Math.PI/this.rings
 
-	console.log(this.iR);
-	console.log(this.oR);
-	console.log(this.nsides);
-	console.log(this.rings);
-
  	this.initBuffers();
  };
 
@@ -49,14 +44,14 @@ function MyTorus(scene, iRadius, oRadius, nsides, rings) {
  
  	//this.vertices = [];
 	for(var i = 0; i < Math.PI*2; i += this.incT) {
-		this.vertices.push((this.oR + this.iR*Math.cos(i))*Math.cos(f), this.iR*Math.sin(i), (this.oR + this.iR*Math.cos(i))*Math.sin(f));
+		this.vertices.push((this.oR + this.iR*Math.cos(i))*Math.cos(f), (this.oR + this.iR*Math.cos(i))*Math.sin(f), this.iR*Math.sin(i));
 		f += this.incF;
-		this.vertices.push((this.oR + this.iR*Math.cos(i))*Math.cos(f), this.iR*Math.sin(i), (this.oR + this.iR*Math.cos(i))*Math.sin(f));
+		this.vertices.push((this.oR + this.iR*Math.cos(i))*Math.cos(f), (this.oR + this.iR*Math.cos(i))*Math.sin(f), this.iR*Math.sin(i));
 		f -= this.incF;
 		i += this.incT;
-		this.vertices.push((this.oR + this.iR*Math.cos(i))*Math.cos(f), this.iR*Math.sin(i), (this.oR + this.iR*Math.cos(i))*Math.sin(f));
+		this.vertices.push((this.oR + this.iR*Math.cos(i))*Math.cos(f), (this.oR + this.iR*Math.cos(i))*Math.sin(f), this.iR*Math.sin(i));
 		f += this.incF;
-		this.vertices.push((this.oR + this.iR*Math.cos(i))*Math.cos(f), this.iR*Math.sin(i), (this.oR + this.iR*Math.cos(i))*Math.sin(f));
+		this.vertices.push((this.oR + this.iR*Math.cos(i))*Math.cos(f), (this.oR + this.iR*Math.cos(i))*Math.sin(f), this.iR*Math.sin(i));
 		i -= this.incT;
 		f -= this.incF;
 	}
@@ -78,14 +73,14 @@ function MyTorus(scene, iRadius, oRadius, nsides, rings) {
 
  	//this.normals = [];
 	for(var i = 0; i < Math.PI*2; i += this.incT) {
-		this.normals.push((this.oR + this.iR*Math.cos(i))*Math.cos(f), this.iR*Math.sin(i), (this.oR + this.iR*Math.cos(i))*Math.sin(f));
+		this.normals.push((this.oR + this.iR*Math.cos(i))*Math.cos(f), (this.oR + this.iR*Math.cos(i))*Math.sin(f), this.iR*Math.sin(i));
 		f += this.incF;
-		this.normals.push((this.oR + this.iR*Math.cos(i))*Math.cos(f), this.iR*Math.sin(i), (this.oR + this.iR*Math.cos(i))*Math.sin(f));
+		this.normals.push((this.oR + this.iR*Math.cos(i))*Math.cos(f), (this.oR + this.iR*Math.cos(i))*Math.sin(f), this.iR*Math.sin(i));
 		f -= this.incF;
 		i += this.incT;
-		this.normals.push((this.oR + this.iR*Math.cos(i))*Math.cos(f), this.iR*Math.sin(i), (this.oR + this.iR*Math.cos(i))*Math.sin(f));
+		this.normals.push((this.oR + this.iR*Math.cos(i))*Math.cos(f), (this.oR + this.iR*Math.cos(i))*Math.sin(f), this.iR*Math.sin(i));
 		f += this.incF;
-		this.normals.push((this.oR + this.iR*Math.cos(i))*Math.cos(f), this.iR*Math.sin(i), (this.oR + this.iR*Math.cos(i))*Math.sin(f));
+		this.normals.push((this.oR + this.iR*Math.cos(i))*Math.cos(f), (this.oR + this.iR*Math.cos(i))*Math.sin(f), this.iR*Math.sin(i));
 		i -= this.incT;
 		f -= this.incF;
 	}
@@ -112,14 +107,6 @@ function MyTorus(scene, iRadius, oRadius, nsides, rings) {
 
 	inaux += this.nsides * 4;
  }
-
- console.log(this.vertices);
- console.log(this.indices);
- console.log(this.normals);
-
- console.log(this.vertices.length);
- console.log(this.indices.length);
- console.log(this.normals.length);
 
  	this.primitiveType = this.scene.gl.TRIANGLES;
  	this.initGLBuffers();
