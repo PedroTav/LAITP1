@@ -29,6 +29,33 @@ XMLscene.prototype.init = function (application) {
 
     //this.quad = new MyQuad(this, 1, 2, 1, 2);
 
+	var controlpoints = [	// U = 0
+						[ // V = 0..3;
+							 [ -2.0, -2.0, 0, 1 ],
+							 [ -2.0, -1.0, 0, 1 ],
+							 [ -2.0, 1.0, 0, 1 ],
+							 [ -2.0, 2.0, 0, 1 ]
+						],
+						// U = 1
+						[ // V = 0..3
+							 [ 0, -2.0, 0, 1 ],
+							 [ 0, 0, 4, 1 ],
+							 [ 0, 0, 4, 1 ],
+							 [ 0, 2.0, 0, 1 ]
+						],
+						// U = 2
+						[ // V = 0..3
+							 [ 2.0, -2.0, 0, 1 ],
+							 [ 2.0, -1.0, 0, 1 ],
+							 [ 2.0, 1.0, 0, 1 ],
+							 [ 2.0, 2.0, 0, 1 ]
+						]
+					];
+
+
+	this.plane = new Plane(this, 7, 4, 6, 6);
+	this.patch = new Patch(this, 2, 3, 10, 10, controlpoints);
+
     this.bool = true;
 
     this.booleans = [];
@@ -54,6 +81,7 @@ XMLscene.prototype.init = function (application) {
 
     this.cameras = [];
     this.currCamera = 0;
+	
 
     this.enableTextures(true);
 
@@ -155,7 +183,11 @@ XMLscene.prototype.display = function () {
 	/*this.translate(0, 0, 2);
 	this.appearance.apply();
 	this.quad.display();*/
-	this.component.display();
+	/*this.component.display();*/
+	this.graph.textures[2].applyTexture();
+	this.patch.display();
+	//this.graph.textures[0].applyTexture();
+	//this.plane.display();
 	this.popMatrix();
 
 };
