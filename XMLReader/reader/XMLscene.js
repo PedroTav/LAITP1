@@ -56,6 +56,23 @@ XMLscene.prototype.init = function (application) {
 	this.plane = new Plane(this, 7, 4, 6, 6);
 	this.patch = new Patch(this, 2, 3, 10, 10, controlpoints);
 
+	var controlvector = [];
+
+	controlvector.push(new Coords(0, 0, 0));
+	controlvector.push(new Coords(1, 1, 1));
+	controlvector.push(new Coords(1, 1, 3));
+	controlvector.push(new Coords(4, 4, 3));
+	controlvector.push(new Coords(3, 3, 3));
+
+
+	this.linearAnimation = new LinearAnimation(controlvector, 10000);
+
+	this.dt = 0;
+
+	var d = new Date();
+
+	this.previousTime = d.getTime();
+
     this.bool = true;
 
     this.booleans = [];
@@ -81,11 +98,12 @@ XMLscene.prototype.init = function (application) {
 
     this.cameras = [];
     this.currCamera = 0;
-	
 
     this.enableTextures(true);
-
+	
 	this.axis=new CGFaxis(this);
+
+	this.setUpdatePeriod(100);
 };
 
 XMLscene.prototype.initLights = function () {
@@ -184,7 +202,9 @@ XMLscene.prototype.display = function () {
 	this.appearance.apply();
 	this.quad.display();*/
 	/*this.component.display();*/
-	this.graph.textures[2].applyTexture();
+	//this.graph.textures[0].applyTexture();
+
+	this.linearAnimation.getPosition(this.dt).apply(this);
 	this.patch.display();
 	//this.graph.textures[0].applyTexture();
 	//this.plane.display();
@@ -228,4 +248,11 @@ XMLscene.prototype.updateLights = function()
 
 		this.lights[i].update();
 	}
+}
+
+XMLscene.prototype.update = function(currTime)
+{
+	this.dt = currTime - this.previousTime;
+
+	this.previousTime = currTime;
 }
