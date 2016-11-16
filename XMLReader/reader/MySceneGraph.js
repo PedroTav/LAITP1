@@ -37,6 +37,9 @@ function MySceneGraph(filename, scene) {
 	this.transformations = [];
 	this.transformationsID = [];
 
+	this.animations = [];
+	this.animationsID = [];
+
 	this.lights = [];
 	this.lightsBool = {};
 	this.lightsID = [];
@@ -113,6 +116,13 @@ MySceneGraph.prototype.onXMLReady=function()
 	}
 	
 	error = this.parseTransformations(rootElement);
+
+	if (error != null) {
+		this.onXMLError(error);
+		return;
+	}
+
+	error = this.parseAnimations(rootElement);
 
 	if (error != null) {
 		this.onXMLError(error);
@@ -417,6 +427,8 @@ MySceneGraph.prototype.processComponent = function(component, name, components)
 	var c = new MyComponent(this.scene);
 
 	this.processTransforms(component, c);
+
+	this.associateAnimations(component, c);
 
 	var children = component.getElementsByTagName('children');
 
@@ -973,6 +985,108 @@ MySceneGraph.prototype.processMaterial = function(material)
 	var mater = new Material(this.scene, id, emiss, ambi, diff, spec);
 
 	this.materials.push(mater);
+}
+
+MySceneGraph.prototype.parseAnimations = function(rootElement)
+{
+	var elems =  rootElement.getElementsByTagName('animations');
+	if (elems == null) {
+		return "animations element is missing.";
+	}
+
+	if (elems.length != 1) {
+		return "either zero or more than one 'animations' element found.";
+	}
+
+	var animations = elems[0].children;
+
+	for(var i = 0; i < animations.length; i++)
+	{
+		this.processAnimation(animations[i]);
+	}
+
+	console.log(this.animations);
+	console.log(this.animationsID);
+
+	console.log("animations read");
+}
+
+MySceneGraph.prototype.processAnimation = function(animation)
+{
+	var id = animation.attributes.getNamedItem("id").value;
+
+	var time = this.reader.getFloat(animation, "span", true);
+
+	var type = animation.attributes.getNamedItem("type").value;
+
+	if(type == "linear")
+	{
+		var controlPoints = animation.children;
+
+		var controlvector = [];
+
+		for(var i = 0; i < controlPoints.length; i++)
+		{
+			var x = this.reader.getFloat(controlPoints[i], "xx", true);
+			var y = this.reader.getFloat(controlPoints[i], "yy", true);
+			var z = this.reader.getFloat(controlPoints[i], "zz", true);
+
+			controlvector.push(new Coords(x, y, z));
+		}
+
+		this.animations.push(new LinearAnimation(controlvector, time*1000));
+	}
+	else if(type == "circular")
+	{
+		var x = this.reader.getFloat(animation, "centerx", true);
+		var y = this.reader.getFloat(animation, "centery", true);
+		var z = this.reader.getFloat(animation, "centerz", true);
+
+		var radius = this.reader.getFloat(animation, "radius", true);
+		var startAng = this.reader.getFloat(animation, "startang", true)*Math.PI/180;
+		var rotAng = this.reader.getFloat(animation, "rotang", true)*Math.PI/180;
+
+		this.animations.push(new CircularAnimation(new Coords(x, y, z), radius, startAng, rotAng, time*1000));
+	}
+
+	this.animationsID.push(id);
+}
+
+MySceneGraph.prototype.associateAnimations = function(component, c)
+{
+	var animation = component.getElementsByTagName('animation');
+
+	if(animation[0] == null)
+	{
+		return;
+	}
+
+	var aRef = animation[0].getElementsByTagName('animationref');
+
+	if(aRef == null)
+	{
+		return;
+	}
+
+	for(var i = 0; i < aRef.length; i++)
+	{
+		var id = aRef[i].attributes.getNamedItem("id").value;
+
+		c.addAnimation(this.getAnimation(id));
+	}
+}
+
+MySceneGraph.prototype.getAnimation = function(id)
+{
+	for(var i = 0; i < this.animations.length; i++)
+	{
+		if(this.animationsID[i] == id)
+		{
+			return this.animations[i];
+		}
+	}
+
+	return null;
 }
 
 /*

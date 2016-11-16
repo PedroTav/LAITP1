@@ -150,7 +150,22 @@
 		</transformation>
         
     </transformations>
-    
+
+    <animations>
+
+		<animation id="animation1" span="5" type="linear">
+
+			<controlpoint xx="0" yy="0" zz="0" />
+			<controlpoint xx="1" yy="0" zz="0" />
+			<controlpoint xx="1" yy="0" zz="1" />
+
+		</animation>
+
+		<animation id="animation2" span="5" type="circular"
+					centerx="0" centery="0" centerz="0"
+					radius="5" startang="0" rotang="20" />
+
+	</animations>
     
     <primitives>
     
@@ -646,6 +661,11 @@
               <translate x="5.0" y="0.0" z="-2.7" />
 			   
             </transformation>
+
+            <animation>
+            	<animationref id="animation1"/>
+            	<animationref id="animation2"/>
+            </animation>
        
             <materials>
                 <material id="none" />

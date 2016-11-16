@@ -3,6 +3,8 @@
  * @constructor
  */
  function LinearAnimation(controlvector, time) {
+
+    Animation.call(this);
  	
  	this.controlvector = controlvector;
  	this.time = time;
@@ -20,9 +22,11 @@
     this.dy = controlvector[1].getY() - controlvector[0].getY();
     this.dz = controlvector[1].getZ() - controlvector[0].getZ();
 
-    this.curDx = 0.0;
-    this.curDy = 0.0;
-    this.curDz = 0.0;
+    this.curDx = 0;
+    this.curDy = 0;
+    this.curDz = 0;
+
+    this.ang = 0;
 
     this.over = false;
 
@@ -31,6 +35,8 @@
     this.x = controlvector[0].getX();
     this.y = controlvector[0].getY();
     this.z = controlvector[0].getZ();
+
+    console.log(this);
  };
 
 
@@ -38,37 +44,51 @@
 
  LinearAnimation.prototype.getPosition = function(dt)
  { 
-    console.log(this.currentControlPointIndex);
+       var transformation = new MyFullTransform();
 
-   var transformation = new MyFullTransform();
+       var initT = new MyTransformation();
 
-   if(this.over)
-    {
-        var t = new MyTransformation();
-        t.setTranslate(this.x, this.y, this.z);
+       initT.setTranslate(this.controlvector[0].getX(), this.controlvector[0].getY(), this.controlvector[0].getZ());
 
-        transformation.addTransform(t);
+       transformation.addTransform(initT);
 
-        return transformation;
-    }
+       if(this.over)
+       {
+            var t = new MyTransformation();
+            t.setTranslate(this.x, this.y, this.z);
 
-   if(this.curDx > this.dx || this.curDy > this.dy || this.curDz > this.dz)
-   {
-      this.currentControlPointIndex++;
+            transformation.addTransform(t);
 
-      if(this.currentControlPointIndex == this.controlvector.length)
-      {
-        this.over = true;
-      }
-      else
-      {
-          this.updateControlPoint();
-      }
+            var t = new MyTransformation();
+            t.setRotate(0, 1, 0, this.ang);
 
-      console.log(this.curDx);
-   }
-   else
-   {
+            transformation.addTransform(t);
+
+            return transformation;
+       }
+
+       if(this.curDx > this.dx || this.curDy > this.dy || this.curDz > this.dz)
+       {
+              this.currentControlPointIndex++;
+
+              if(this.currentControlPointIndex == this.controlvector.length)
+              {
+                     this.over = true;
+              }
+              else
+              {
+                     var previousPath = new Coords(this.currentPath.getX(), this.currentPath.getY(), this.currentPath.getZ());
+                     this.updateControlPoint();
+
+                     var product = previousPath.getX()*this.currentPath.getX() + previousPath.getZ()*this.currentPath.getZ();
+                     var norm1 = Math.sqrt(previousPath.getX()*previousPath.getX() + previousPath.getZ()*previousPath.getZ());
+                     var norm2 = Math.sqrt(this.currentPath.getX()*this.currentPath.getX() + this.currentPath.getZ()*this.currentPath.getZ());
+                     var lengths = norm1*norm2;
+
+                     this.ang += Math.acos(product/lengths);
+              }
+       }
+
        var dif = dt*this.velocity;
 
        this.x += dif*this.currentPath.getX();
@@ -84,8 +104,12 @@
 
        transformation.addTransform(transf);
 
+       var t = new MyTransformation();
+       t.setRotate(0, 1, 0, this.ang);
+
+       transformation.addTransform(t);
+
        return transformation;
-   }
  }
 
  LinearAnimation.prototype.getVelocity = function() {
@@ -126,6 +150,4 @@ LinearAnimation.prototype.updateControlPoint = function()
       this.curDx = 0;
       this.curDy = 0;
       this.curDz = 0;
-
-      console.log(this.curDx);
 }

@@ -58,14 +58,15 @@ XMLscene.prototype.init = function (application) {
 
 	var controlvector = [];
 
-	controlvector.push(new Coords(0, 0, 0));
-	controlvector.push(new Coords(1, 1, 1));
-	controlvector.push(new Coords(1, 1, 3));
-	controlvector.push(new Coords(4, 4, 3));
-	controlvector.push(new Coords(3, 3, 3));
+	controlvector.push(new Coords(0, 0, -2));
+	controlvector.push(new Coords(0, 0, 1));
+	controlvector.push(new Coords(1, 0, 1));
+	//controlvector.push(new Coords(4, 4, 3));
+	//controlvector.push(new Coords(3, 3, 3));
 
 
 	this.linearAnimation = new LinearAnimation(controlvector, 10000);
+	this.circularAnimation = new CircularAnimation(new Coords(3, 0, 0), 5, Math.PI/4, Math.PI/2, 10000);
 
 	this.dt = 0;
 
@@ -201,11 +202,14 @@ XMLscene.prototype.display = function () {
 	/*this.translate(0, 0, 2);
 	this.appearance.apply();
 	this.quad.display();*/
-	/*this.component.display();*/
+	this.component.display();
 	//this.graph.textures[0].applyTexture();
 
-	this.linearAnimation.getPosition(this.dt).apply(this);
-	this.patch.display();
+	//console.log(this.linearAnimation.getPosition(this.dt));
+
+	//this.linearAnimation.getPosition(this.dt).apply(this);
+	//this.circularAnimation.getPosition(this.dt).apply(this);
+	//this.patch.display();
 	//this.graph.textures[0].applyTexture();
 	//this.plane.display();
 	this.popMatrix();
@@ -255,4 +259,6 @@ XMLscene.prototype.update = function(currTime)
 	this.dt = currTime - this.previousTime;
 
 	this.previousTime = currTime;
+
+	this.component.update(this.dt);
 }

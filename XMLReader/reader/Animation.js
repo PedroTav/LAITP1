@@ -2,8 +2,8 @@
  * Animation
  * @constructor
  */
- function Animation(scene) {
- 	
+ function Animation() {
+ 	this.over = false;
  };
 
 

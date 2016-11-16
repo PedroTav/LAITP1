@@ -15,13 +15,19 @@ function MyComponent(scene)
     this.tID = "none";
     this.mID = [];
 
+    this.animations = [];
+    this.currentAnimation = [];
+
     this.defaultAppearance = new CGFappearance(scene);
 }
 
 MyComponent.prototype.display = function()
 {
     this.scene.pushMatrix();
+
     this.applyTransforms();
+
+    this.applyAnimations();
 
     for(var i = 0; i < this.components.length; i++)
     {
@@ -123,5 +129,39 @@ MyComponent.prototype.checkInheritanceMaterial = function()
                 }
             }
         }
+    }
+}
+
+MyComponent.prototype.addAnimation = function(animation)
+{
+    this.animations.push(animation);
+}
+
+MyComponent.prototype.update = function(dt)
+{
+    for(var i = 0; i < this.animations.length; i++)
+    {
+        this.currentAnimation[i] = this.animations[i].getPosition(dt);
+        
+        if(!this.animations[i].over)
+        {
+            break;
+        }
+    }
+
+    for(var i = 0; i < this.components.length; i++)
+    {
+        if(this.components[i] instanceof MyComponent)
+        {
+            this.components[i].update(dt);
+        }
+    }
+}
+
+MyComponent.prototype.applyAnimations = function()
+{
+    for(var i = 0; i < this.currentAnimation.length; i++)
+    {
+        this.currentAnimation[i].apply(this.scene);
     }
 }
