@@ -209,6 +209,9 @@
 				<controlpoint x="2" y="1" z="0" />
 				<controlpoint x="2" y="2" z="0" />
           </patch>
+           <primitive id="vehicle">
+           		<vehicle></vehicle>
+		   </primitive>
         </primitive> 
 
     </primitives>
@@ -731,7 +734,9 @@
 				<componentref id="wall5" />
 				<componentref id="lamp1" />
 				<componentref id="lamp2" />
+				<componentref id="vehicle1" />
 				<componentref id="patchC" />
+			
 				
             </children>
             
@@ -760,6 +765,27 @@
                 <componentref id="leg4" />
                 <componentref id="tabletop" />
                 
+            </children>
+            
+        </component>
+        
+        <component id="vehicle1">
+        
+            
+            <transformation>
+            
+               <translate x="8.0" y="3.0" z="8.0" />
+			   
+            </transformation>
+       
+            <materials>
+                <material id="none" />
+            </materials>
+                         
+            <texture id="none" />
+            
+            <children>
+                <primitiveref id="vehicle" />
             </children>
             
         </component>

@@ -16,6 +16,7 @@ function MySceneGraph(filename, scene) {
 	this.cylinder = [];
 	this.sphere = [];
 	this.torus = [];
+	this.vehicle = [];
 	this.plane = [];
 	this.patch = [];
 
@@ -24,6 +25,7 @@ function MySceneGraph(filename, scene) {
 	this.cylinderID = 0;
 	this.sphereID = 0;
 	this.torusID = 0;
+	this.vehicleID = 0;
 	this.planeID = 0;
 	this.patchID = 0;
 
@@ -34,6 +36,7 @@ function MySceneGraph(filename, scene) {
 	this.cylinderStrings = [];
 	this.sphereStrings = [];
 	this.torusStrings = [];
+	this.vehicleStrings = [];
 	this.planeStrings = [];
 	this.patchStrings = [];
 
@@ -338,6 +341,14 @@ MySceneGraph.prototype.parsePrimitives= function(rootElement)
 			this.processPatch(type[0], name);
 			continue;
 		}
+
+		type = primitives[i].getElementsByTagName('vehicle');
+
+		if(type != null && type.length > 0)
+		{
+			this.processVehicle(type[0], name);
+			continue;
+		}
 	}
 
 	console.log("primitives read");
@@ -406,6 +417,13 @@ MySceneGraph.prototype.processTorus= function(type, name)
 	this.torus[this.torusID] = new MyTorus(this.scene, inner, outer, slices, loops);
 	this.torusStrings[this.torusID] = name;
 	this.torusID++;
+}
+
+MySceneGraph.prototype.processVehicle= function(type, name)
+{
+	this.vehicle[this.vehicleID] = new MyVehicle(this.scene);
+	this.vehicleStrings[this.vehicleID] = name;
+	this.vehicleID++;
 }
 
 MySceneGraph.prototype.processPlane= function(type, name)
@@ -719,6 +737,15 @@ MySceneGraph.prototype.createNewPrimitive = function(name, c)
 		if(this.torusStrings[i] == name)
 		{
 			c.components.push(this.torus[i]);
+			//this.object.push(c);
+		}
+	}
+
+	for(var i = 0; i < this.vehicleStrings.length; i++)
+	{
+		if(this.vehicleStrings[i] == name)
+		{
+			c.components.push(this.vehicle[i]);
 			//this.object.push(c);
 		}
 	}
