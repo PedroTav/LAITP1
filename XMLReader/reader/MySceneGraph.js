@@ -16,12 +16,16 @@ function MySceneGraph(filename, scene) {
 	this.cylinder = [];
 	this.sphere = [];
 	this.torus = [];
+	this.plane = [];
+	this.patch = [];
 
 	this.rectangleID = 0;
 	this.triangleID = 0;
 	this.cylinderID = 0;
 	this.sphereID = 0;
 	this.torusID = 0;
+	this.planeID = 0;
+	this.patchID = 0;
 
 	this.cameras = [];
 
@@ -30,6 +34,8 @@ function MySceneGraph(filename, scene) {
 	this.cylinderStrings = [];
 	this.sphereStrings = [];
 	this.torusStrings = [];
+	this.planeStrings = [];
+	this.patchStrings = [];
 
 	this.object = [];
 	this.objectStrings = [];
@@ -316,6 +322,22 @@ MySceneGraph.prototype.parsePrimitives= function(rootElement)
 			this.processTorus(type[0], name);
 			continue;
 		}
+
+		type = primitives[i].getElementsByTagName('plane');
+
+		if(type != null && type.length > 0)
+		{
+			this.processPlane(type[0], name);
+			continue;
+		}
+
+		type = primitives[i].getElementsByTagName('patch');
+
+		if(type != null && type.length > 0)
+		{
+			this.processPatch(type[0], name);
+			continue;
+		}
 	}
 
 	console.log("primitives read");
@@ -384,6 +406,58 @@ MySceneGraph.prototype.processTorus= function(type, name)
 	this.torus[this.torusID] = new MyTorus(this.scene, inner, outer, slices, loops);
 	this.torusStrings[this.torusID] = name;
 	this.torusID++;
+}
+
+MySceneGraph.prototype.processPlane= function(type, name)
+{
+	var dimX = this.reader.getFloat(type, "dimX", true);
+	var dimY = this.reader.getFloat(type, "dimY", true);
+	var partsX = this.reader.getFloat(type, "partsX", true);
+	var partsY = this.reader.getFloat(type, "partsY", true);
+
+	this.plane[this.planeID] = new Plane(this.scene, dimX, dimY, partsX, partsY);
+	this.planeStrings[this.planeID] = name;
+	this.planeID++;
+}
+
+MySceneGraph.prototype.processPatch= function(type, name)
+{
+	var orderU = this.reader.getFloat(type, "orderU", true);
+	var orderV = this.reader.getFloat(type, "orderV", true);
+	var partsU = this.reader.getFloat(type, "partsU", true);
+	var partsV = this.reader.getFloat(type, "partsV", true);
+
+	var controlvertexes = [];
+
+	var controlpoint = type.children;
+
+	var i = 0;
+
+	for(var j = 0; j <= orderU; j++)
+	{
+		controlvertexes.push([]);
+		for(var k = 0; k <= orderV; k++)
+		{
+			controlvertexes[j].push([]);
+
+			var x = this.reader.getFloat(controlpoint[i], "x", true);
+			var y = this.reader.getFloat(controlpoint[i], "y", true);
+			var z = this.reader.getFloat(controlpoint[i], "z", true);
+
+			controlvertexes[j][k].push(x);
+			controlvertexes[j][k].push(y);
+			controlvertexes[j][k].push(z);
+			controlvertexes[j][k].push(1);
+
+			i++;
+		}
+	}
+
+	console.log(controlvertexes);
+
+	this.patch[this.patchID] = new Patch(this.scene, orderU, orderV, partsU, partsV, controlvertexes);
+	this.patchStrings[this.patchID] = name;
+	this.patchID++;
 }
 
 MySceneGraph.prototype.parseComponents = function(rootElement)
@@ -645,6 +719,24 @@ MySceneGraph.prototype.createNewPrimitive = function(name, c)
 		if(this.torusStrings[i] == name)
 		{
 			c.components.push(this.torus[i]);
+			//this.object.push(c);
+		}
+	}
+
+	for(var i = 0; i < this.planeStrings.length; i++)
+	{
+		if(this.planeStrings[i] == name)
+		{
+			c.components.push(this.plane[i]);
+			//this.object.push(c);
+		}
+	}
+
+	for(var i = 0; i < this.patchStrings.length; i++)
+	{
+		if(this.patchStrings[i] == name)
+		{
+			c.components.push(this.patch[i]);
 			//this.object.push(c);
 		}
 	}

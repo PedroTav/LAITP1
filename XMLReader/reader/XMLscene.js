@@ -52,6 +52,8 @@ XMLscene.prototype.init = function (application) {
 						]
 					];
 
+					console.log(controlpoints);
+
 
 	this.plane = new Plane(this, 7, 4, 6, 6);
 	this.patch = new Patch(this, 2, 3, 10, 10, controlpoints);

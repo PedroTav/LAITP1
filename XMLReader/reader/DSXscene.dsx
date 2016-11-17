@@ -191,7 +191,26 @@
 		<primitive id="torus">
             <torus inner="0.5" outer="2.5" slices="8" loops="8" />
         </primitive>
-        
+        <primitive id="plane">
+			<plane dimX="3" dimY="2" partsX="10" partsY="10"/>
+		</primitive>
+		<primitive id="patch">
+			<patch orderU="2" orderV="3" partsU="10" partsV="10" >    
+				<controlpoint x="-2" y="-2" z="0" />
+				<controlpoint x="-2" y="-1" z="0" />
+				<controlpoint x="-2" y="1" z="0" />
+				<controlpoint x="-2" y="2" z="0" />
+				<controlpoint x="0" y="-2" z="0" />
+				<controlpoint x="0" y="0" z="4" />
+				<controlpoint x="0" y="0" z="4" />
+				<controlpoint x="0" y="2" z="0" />		
+				<controlpoint x="2" y="-2" z="0" />
+				<controlpoint x="2" y="-1" z="0" />
+				<controlpoint x="2" y="1" z="0" />
+				<controlpoint x="2" y="2" z="0" />
+          </patch>
+        </primitive> 
+
     </primitives>
     
     
@@ -712,6 +731,7 @@
 				<componentref id="wall5" />
 				<componentref id="lamp1" />
 				<componentref id="lamp2" />
+				<componentref id="patchC" />
 				
             </children>
             
@@ -1264,6 +1284,50 @@
             <children>
             
                 <primitiveref id="torus" />
+                
+            </children>
+            
+        </component>
+
+        <component id="planeC">
+            
+            <transformation>
+            
+               <translate x="5.0" y="5.0" z="5.0" />
+			   
+            </transformation>
+       
+            <materials>
+                <material id="none" />
+            </materials>
+                         
+            <texture id="none" />
+            
+            <children>
+            
+                <primitiveref id="plane" />
+                
+            </children>
+            
+        </component>
+
+        <component id="patchC">
+            
+            <transformation>
+            
+               <translate x="5.0" y="5.0" z="5.0" />
+			   
+            </transformation>
+       
+            <materials>
+                <material id="none" />
+            </materials>
+                         
+            <texture id="none" />
+            
+            <children>
+            
+                <primitiveref id="patch" />
                 
             </children>
             
