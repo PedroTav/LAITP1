@@ -4,7 +4,7 @@
 
     <!-- deve definir-se um objeto para raiz do grafo , assim -->
     <!-- como o comprimento dos tres eixos (cilindros) -->
-    <scene root="root" axis_length="0.0" />
+    <scene root="root" axis_length="2.0" />
     
     
     <views default="cameras" >
@@ -733,7 +733,7 @@
             
 			
 				<componentref id="floor" />
-                <componentref id="table" /> 
+               	<componentref id="table" /> 
                 <componentref id="bookshelf" /> 
                 <componentref id="rug" /> 
                 <componentref id="car" />
@@ -744,7 +744,7 @@
 				<componentref id="vehicle1" />
 				<componentref id="chessboardC" />
 				<!-- <componentref id="patchC" /> -->
-			
+				
 				
             </children>
             
@@ -782,7 +782,11 @@
             
             <transformation>
             
-               <translate x="8.0" y="3.0" z="8.0" />
+            	
+               <translate x="8.0" y="5.0" z="8.0" />
+               <scale x="0.2" y="0.2" z="0.2" />
+               <rotate axis="x" angle="-90" />
+               <rotate axis="z" angle="90" />
 			   
             </transformation>
        
