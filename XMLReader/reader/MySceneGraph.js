@@ -19,6 +19,7 @@ function MySceneGraph(filename, scene) {
 	this.vehicle = [];
 	this.plane = [];
 	this.patch = [];
+	this.chessboard = [];
 
 	this.rectangleID = 0;
 	this.triangleID = 0;
@@ -28,6 +29,7 @@ function MySceneGraph(filename, scene) {
 	this.vehicleID = 0;
 	this.planeID = 0;
 	this.patchID = 0;
+	this.chessboardID = 0;
 
 	this.cameras = [];
 
@@ -39,6 +41,7 @@ function MySceneGraph(filename, scene) {
 	this.vehicleStrings = [];
 	this.planeStrings = [];
 	this.patchStrings = [];
+	this.chessboardStrings = [];
 
 	this.object = [];
 	this.objectStrings = [];
@@ -349,6 +352,14 @@ MySceneGraph.prototype.parsePrimitives= function(rootElement)
 			this.processVehicle(type[0], name);
 			continue;
 		}
+
+		type = primitives[i].getElementsByTagName('chessboard');
+
+		if(type != null && type.length > 0)
+		{
+			this.processChessboard(type[0], name);
+			continue;
+		}
 	}
 
 	console.log("primitives read");
@@ -476,6 +487,41 @@ MySceneGraph.prototype.processPatch= function(type, name)
 	this.patch[this.patchID] = new Patch(this.scene, orderU, orderV, partsU, partsV, controlvertexes);
 	this.patchStrings[this.patchID] = name;
 	this.patchID++;
+}
+
+MySceneGraph.prototype.processChessboard= function(type, name)
+{
+	var du = this.reader.getFloat(type, "du", true);
+	var dv = this.reader.getFloat(type, "dv", true);
+	var su = this.reader.getFloat(type, "su", true);
+	var sv = this.reader.getFloat(type, "sv", true);
+
+	var id = type.attributes.getNamedItem("textureref").value;
+
+	var colors = type.children;
+
+	var r1 = this.reader.getFloat(colors[0], "r", true);
+	var g1 = this.reader.getFloat(colors[0], "g", true);
+	var b1 = this.reader.getFloat(colors[0], "b", true);
+	var a1 = this.reader.getFloat(colors[0], "a", true);
+
+	var r2 = this.reader.getFloat(colors[1], "r", true);
+	var g2 = this.reader.getFloat(colors[1], "g", true);
+	var b2 = this.reader.getFloat(colors[1], "b", true);
+	var a2 = this.reader.getFloat(colors[1], "a", true);
+
+	var rs = this.reader.getFloat(colors[2], "r", true);
+	var gs = this.reader.getFloat(colors[2], "g", true);
+	var bs = this.reader.getFloat(colors[2], "b", true);
+	var as = this.reader.getFloat(colors[2], "a", true);
+
+	var c1 = vec4.fromValues(r1, g1, b1, a1);
+	var c2 = vec4.fromValues(r2, g2, b2, a2);
+	var cs = vec4.fromValues(rs, gs, bs, as);
+
+	this.chessboard[this.chessboardID] = new Chessboard(this.scene, du, dv, su, sv, this.getTexture(id), c1, c2, cs);
+	this.chessboardStrings[this.chessboardID] = name;
+	this.chessboardID++;
 }
 
 MySceneGraph.prototype.parseComponents = function(rootElement)
@@ -764,6 +810,15 @@ MySceneGraph.prototype.createNewPrimitive = function(name, c)
 		if(this.patchStrings[i] == name)
 		{
 			c.components.push(this.patch[i]);
+			//this.object.push(c);
+		}
+	}
+
+	for(var i = 0; i < this.chessboardStrings.length; i++)
+	{
+		if(this.chessboardStrings[i] == name)
+		{
+			c.components.push(this.chessboard[i]);
 			//this.object.push(c);
 		}
 	}

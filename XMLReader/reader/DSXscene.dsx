@@ -209,9 +209,16 @@
 				<controlpoint x="2" y="1" z="0" />
 				<controlpoint x="2" y="2" z="0" />
           </patch>
-           <primitive id="vehicle">
+        </primitive>
+        <primitive id="vehicle">
            		<vehicle></vehicle>
-		   </primitive>
+        </primitive>
+        <primitive id="chessboard">
+           	<chessboard du="8" dv="8" textureref="wood1" su="3" sv="4">
+              <c1 r="0.627" g="0.322" b="0.176" a="1.0" />
+              <c2 r="0.804" g="0.522" b="0.247" a="1.0" />
+      	      <cs r="0.502" g="0.0" b="0.0" a="1.0" />
+			</chessboard>
         </primitive> 
 
     </primitives>
@@ -735,7 +742,8 @@
 				<componentref id="lamp1" />
 				<componentref id="lamp2" />
 				<componentref id="vehicle1" />
-				<componentref id="patchC" />
+				<componentref id="chessboardC" />
+				<!-- <componentref id="patchC" /> -->
 			
 				
             </children>
@@ -1354,6 +1362,29 @@
             <children>
             
                 <primitiveref id="patch" />
+                
+            </children>
+            
+        </component>
+
+        <component id="chessboardC">
+            
+            <transformation>
+            
+               <translate x="5.0" y="5.0" z="5.0" />
+               <rotate axis="x" angle="-45.0" />
+			   
+            </transformation>
+       
+            <materials>
+                <material id="none" />
+            </materials>
+                         
+            <texture id="none" />
+            
+            <children>
+            
+                <primitiveref id="chessboard" />
                 
             </children>
             
