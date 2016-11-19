@@ -1,0 +1,315 @@
+    
+<dsx>
+
+
+    <!-- deve definir-se um objeto para raiz do grafo , assim -->
+    <!-- como o comprimento dos tres eixos (cilindros) -->
+    <scene root="root" axis_length="2.0" />
+    
+    
+    <views default="cameras" >
+    
+        <!-- declaracao obrigatoria de pelo menos uma vista; -->
+        <!-- se varias vistas declaradas, o default e' a -->
+        <!-- primeira vista; de cada vez que se pressione a tecla v/V, -->
+        <!-- a vista muda para a proxima da lista; da --> 
+        <!-- ultima vista da lista volta 'a primeira -->
+        <perspective id="camera1" near="0.1" far="500.0" angle="60.0">
+            <from x="10.0" y="10.0" z="10.0" />
+            <to x="0.0" y="0.0" z="-4.0" />
+        </perspective>
+        <perspective id="camera2" near="0.1" far="500.0" angle="60.0">
+            <from x="40.0" y="40.0" z="40.0" />
+            <to x="0.0" y="0.0" z="-4.0" />
+        </perspective>
+        
+    </views>
+    
+
+    <illumination doublesided="1" local="1" >
+    
+        <ambient r="1.0" g="1.0" b="1.0" a="1.0" />
+        <background r="0.0" g="0.0" b="0.0" a="1.0" />
+        
+    </illumination>
+    
+    
+    <lights>
+    
+        <!-- Deve existir um ou mais blocos "omni" ou "spot" -->
+        <!-- Os identificadores "id" nao podem ser repetidos -->
+        <omni id="light1" enabled="1" >
+            <location x="1.0" y="3.0" z="5.0" w="1.0" />
+            <ambient r="0.8" g="0.8" b="0.8" a="1.0" />
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+            <specular r="1.0" g="1.0" b="1.0" a="1.0" />
+        </omni>
+		
+		<omni id="light2" enabled="1" >
+            <location x="1.0" y="3.0" z="-5.0" w="1.0" />
+            <ambient r="0.8" g="0.8" b="0.8" a="1.0" />
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+            <specular r="1.0" g="1.0" b="1.0" a="1.0" />
+        </omni>
+        
+        <spot id="light3" enabled="1" angle="ff" exponent="ff">
+            <!-- atencao, "target" e' diferente de "direction" -->
+             <target x="-1.0" y="1.0" z="0.0" />
+             <location x="5.0" y="0.0" z="-3.0" />
+             <ambient r="1.0" g="1.0" b="1.0" a="1.0" />
+             <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+             <specular r="1.0" g="1.0" b="1.0" a="1.0" />
+       </spot>
+
+       <omni id="light4" enabled="1" >
+            <location x="1.0" y="3.0" z="5.0" w="1.0" />
+            <ambient r="0.8" g="0.8" b="0.8" a="1.0" />
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+            <specular r="1.0" g="1.0" b="1.0" a="1.0" />
+        </omni>
+
+        <omni id="light5" enabled="1" >
+            <location x="5.0" y="3.0" z="5.0" w="1.0" />
+            <ambient r="0.8" g="0.8" b="0.8" a="1.0" />
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+            <specular r="1.0" g="1.0" b="1.0" a="1.0" />
+        </omni>
+
+         <omni id="light5" enabled="1" >
+            <location x="-3.0" y="3.0" z="5.0" w="1.0" />
+            <ambient r="0.8" g="0.8" b="0.8" a="1.0" />
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+            <specular r="1.0" g="1.0" b="1.0" a="1.0" />
+        </omni>
+    </lights>
+    
+    
+    <textures>
+    
+        <!-- Deve existir um ou mais blocos "texture" -->
+        <!-- Os identificadores "id" nao podem ser repetidos -->
+        <!-- length_s e length_t sao fatores de escala de textura:-->
+        <!-- Exemplo length_s=3.0: uma ocorrencia da textura, em -->
+        <!-- comprimento, deve cobrir um comprimento igual -->
+        <!-- a 3 unidades;  -->
+        <!-- Exemplo length_t=0.4, uma ocorrencia da textura, em -->
+        <!-- largura, deve cobrir uma largura igual a 0.4 unidades.  -->
+        <!-- Transf. Geometr. do tipo escalamento sobre os -->
+        <!-- objetos respetivos podem a violar esta regra.         -->
+        <!-- Nao necessario aplicar fatores de escala em  -->
+        <!-- quadricas (esfera, ciclindro...) -->
+        <texture id="floor" file="textures/floor.png" length_s="1" length_t="1" />  
+        <texture id="lamp" file="textures/lamp.png" length_s="1" length_t="1" />  
+        <texture id="lego" file="textures/lego.png" length_s="1" length_t="1" />  
+        <texture id="metal" file="textures/metal.png" length_s="1" length_t="1" />  
+        <texture id="rug" file="textures/rug.png" length_s="1" length_t="1" />  
+        <texture id="wood1" file="textures/wood1.png" length_s="1" length_t="1" />  
+        <texture id="wood2" file="textures/wood2.png" length_s="1" length_t="1" />  
+        <texture id="wood3" file="textures/wood3.png" length_s="1" length_t="1" />  
+        <texture id="wallpaper" file="textures/wallpaper.png" length_s="1" length_t="1" /> 
+        <texture id="plate" file="textures/plate.png" length_s="1" length_t="1" /> 
+        
+    </textures>
+
+    
+    <materials>
+    
+        <!-- Deve existir um ou mais blocos "material" -->
+        <!-- Os identificadores "id" nao podem ser repetidos -->
+        <material id="material1" >
+            <emission r="0.0" g="0.0" b="0.0" a="1.0" />
+            <ambient r="0.0" g="0.0" b="0.0" a="1.0" />
+            <diffuse r="0.0" g="0.0" b="0.0" a="1.0" />
+            <specular r="0.0" g="0.0" b="0.0" a="1.0" />
+            <shininess value="1.0" />
+        </material>
+        <material id="material2" >
+            <emission r="1.0" g="0.0" b="0.0" a="1.0" />
+            <ambient r="1.0" g="0.0" b="0.0" a="1.0" />
+            <diffuse r="1.0" g="0.0" b="0.0" a="1.0" />
+            <specular r="1.0" g="0.0" b="0.0" a="1.0" />
+            <shininess value="0.0" />
+        </material>
+        <material id="material3" >
+            <emission r="1.0" g="1.0" b="0.0" a="1.0" />
+            <ambient r="1.0" g="1.0" b="0.0" a="1.0" />
+            <diffuse r="1.0" g="1.0" b="0.0" a="1.0" />
+            <specular r="1.0" g="1.0" b="0.0" a="1.0" />
+            <shininess value="0.0" />
+        </material>
+        
+    </materials>
+    
+    
+    <transformations>
+    
+        <!-- Deve existir um ou mais blocos "transformation" -->
+        <!-- Os identificadores "id" nao podem ser repetidos -->
+        <transformation id="mutate">
+           <!-- instrucoes a usar sem limite nem ordem -->
+           <!-- deve existir pelo menos uma transformacao -->
+           <translate x="1.0" y="1.0" z="1.0" />
+           <rotate axis="x" angle="0.0" />
+           <scale x="2.0" y="2.0" z="2.0" />
+        </transformation>
+		<transformation id="wheel">
+            <rotate axis="x" angle="0.0" />
+            <scale x="0.5" y="0.5" z="0.5" />
+		</transformation>
+        
+    </transformations>
+
+    <animations>
+
+		<animation id="animation1" span="5" type="linear">
+
+			<controlpoint xx="0" yy="0" zz="0" />
+			<controlpoint xx="1" yy="0" zz="0" />
+			<controlpoint xx="1" yy="0" zz="1" />
+
+		</animation>
+
+		<animation id="animation2" span="5" type="circular"
+					centerx="0" centery="0" centerz="0"
+					radius="5" startang="0" rotang="20" />
+
+	</animations>
+    
+    <primitives>
+    
+        <!-- Deve existir um ou mais blocos "primitive" -->
+        <!-- Os identificadores "id" nao podem ser repetidos -->
+        <primitive id="rectangle">
+           
+            <!-- apenas pode existir UMA das seguintes tags: -->
+            <!--     rectangle, triangle, cylinder, sphere, torus -->
+            <!-- os parametros devem ser interpretados, genericamente como-->
+            <!-- em OpenGL/GLUT; o cilindro deve adicionalmente ter tampas -->
+            <rectangle x1="-0.5" y1="-0.5" x2="0.5" y2="0.5" />
+		</primitive>
+		<primitive id="triangle">
+            <triangle x1="0.0" y1="0.0" z1="0.0" x2="1.0" y2="0.0" z2="0.0" x3="0.5" y3="1.0" z3="0.0" />
+		</primitive>
+		<primitive id="cylinder">
+            <cylinder base="0.5" top="0.5" height="1" slices="24" stacks="2" />
+		</primitive>
+		<primitive id="sphere">
+		   <sphere radius="0.5" slices="24" stacks="24" />
+		</primitive>
+		<primitive id="torus">
+            <torus inner="0.5" outer="2.5" slices="8" loops="8" />
+        </primitive>
+        <primitive id="plane">
+			<plane dimX="3" dimY="2" partsX="10" partsY="10"/>
+		</primitive>
+		<primitive id="patch">
+			<patch orderU="2" orderV="3" partsU="10" partsV="10" >    
+				<controlpoint x="-2" y="-2" z="0" />
+				<controlpoint x="-2" y="-1" z="0" />
+				<controlpoint x="-2" y="1" z="0" />
+				<controlpoint x="-2" y="2" z="0" />
+				<controlpoint x="0" y="-2" z="0" />
+				<controlpoint x="0" y="0" z="4" />
+				<controlpoint x="0" y="0" z="4" />
+				<controlpoint x="0" y="2" z="0" />		
+				<controlpoint x="2" y="-2" z="0" />
+				<controlpoint x="2" y="-1" z="0" />
+				<controlpoint x="2" y="1" z="0" />
+				<controlpoint x="2" y="2" z="0" />
+          </patch>
+        </primitive>
+        <primitive id="vehicle">
+           		<vehicle slices="50" stacks="50" />
+        </primitive>
+        <primitive id="chessboard">
+           	<chessboard du="8" dv="8" textureref="wood1" su="3" sv="4">
+              <c1 r="0.627" g="0.322" b="0.176" a="1.0" />
+              <c2 r="0.804" g="0.522" b="0.247" a="1.0" />
+      	      <cs r="0.502" g="0.0" b="0.0" a="1.0" />
+			</chessboard>
+        </primitive> 
+
+    </primitives>
+    
+    
+    <components>
+
+        <component id="vehicle1">
+        
+            
+            <transformation>
+            
+            	
+               <translate x="0.0" y="3.0" z="4.0" />
+               <scale x="0.2" y="0.2" z="0.2" />
+               <rotate axis="x" angle="-90" />
+               <rotate axis="z" angle="90" />
+			   
+            </transformation>
+       
+            <materials>
+                <material id="none" />
+            </materials>
+                         
+            <texture id="plate" />
+            
+            <children>
+                <primitiveref id="vehicle" />
+            </children>
+            
+        </component>
+
+        <component id="vehicle2">
+        
+            
+            <transformation>
+            
+            	
+               <translate x="4.0" y="3.0" z="4.0" />
+               <scale x="0.2" y="0.2" z="0.2" />
+               <rotate axis="x" angle="-90" />
+               <rotate axis="z" angle="90" />
+			   
+            </transformation>
+       
+            <materials>
+                <material id="none" />
+            </materials>
+                         
+            <texture id="lego" />
+            
+            <children>
+                <primitiveref id="vehicle" />
+            </children>
+            
+        </component>
+		
+		<component id="root">
+        
+            
+            <transformation>
+            
+
+			   
+            </transformation>
+       
+            <materials>
+                <material id="none" />
+            </materials>
+                         
+            <texture id="none" />
+            
+            <children>
+            
+	
+				<componentref id="vehicle1" />
+				<componentref id="vehicle2" />
+				
+				
+            </children>
+            
+        </component>
+        
+    </components>
+
+</dsx>
