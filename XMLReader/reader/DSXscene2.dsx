@@ -165,13 +165,13 @@
 
 
 			<controlpoint xx="0" yy="0" zz="0" />
-			<controlpoint xx="0" yy="0" zz="6" />
-			<controlpoint xx="8" yy="0" zz="6" />
-			<controlpoint xx="-17" yy="0" zz="-17" />
+			<controlpoint xx="0" yy="0" zz="7" />
+			<controlpoint xx="8" yy="0" zz="7" />
+			<controlpoint xx="-6" yy="0" zz="-6" />
 
 		</animation>
 
-		<animation id="animation3" span="30" type="linear">
+		<animation id="animation3" span="5" type="linear">
 
 			<controlpoint xx="0" yy="0" zz="0" />
 			<controlpoint xx="0" yy="0" zz="3" />
