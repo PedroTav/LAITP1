@@ -435,7 +435,7 @@ MySceneGraph.prototype.processVehicle= function(type, name)
 	var slices = type.attributes.getNamedItem("slices").value;
 	var stacks = type.attributes.getNamedItem("stacks").value;
 		
-	this.vehicle[this.vehicleID] = new MyVehicle(this.scene, slices, stacks);
+	this.vehicle[this.vehicleID] = new Vehicle(this.scene, slices, stacks);
 	this.vehicleStrings[this.vehicleID] = name;
 	this.vehicleID++;
 }
