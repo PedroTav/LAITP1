@@ -161,12 +161,41 @@
 
     <animations>
 
-		<animation id="animation1" span="30" type="linear">
+		<animation id="animation1" span="5" type="linear">
+
 
 			<controlpoint xx="0" yy="0" zz="0" />
+			<controlpoint xx="0" yy="0" zz="1" />
+			<controlpoint xx="0" yy="0" zz="2" />
+			<controlpoint xx="0" yy="0" zz="3" />
+			<controlpoint xx="0" yy="0" zz="4" />
+			<controlpoint xx="0" yy="0" zz="5" />
 			<controlpoint xx="0" yy="0" zz="6" />
+			<controlpoint xx="1" yy="0" zz="6" />
+			<controlpoint xx="2" yy="0" zz="6" />
+			<controlpoint xx="3" yy="0" zz="6" />
+			<controlpoint xx="4" yy="0" zz="6" />
+			<controlpoint xx="5" yy="0" zz="6" />
+			<controlpoint xx="6" yy="0" zz="6" />
+			<controlpoint xx="7" yy="0" zz="6" />
 			<controlpoint xx="8" yy="0" zz="6" />
-			<controlpoint xx="5" yy="0" zz="-18" />
+			<controlpoint xx="-1" yy="0" zz="-1" />
+			<controlpoint xx="-2" yy="0" zz="-2" />
+			<controlpoint xx="-3" yy="0" zz="-3" />
+			<controlpoint xx="-4" yy="0" zz="-4" />
+			<controlpoint xx="-5" yy="0" zz="-5" />
+			<controlpoint xx="-6" yy="0" zz="-6" />
+			<controlpoint xx="-7" yy="0" zz="-7" />
+			<controlpoint xx="-8" yy="0" zz="-8" />
+			<controlpoint xx="-9" yy="0" zz="-9" />
+			<controlpoint xx="-11" yy="0" zz="-11" />
+			<controlpoint xx="-12" yy="0" zz="-12" />
+			<controlpoint xx="-13" yy="0" zz="-13" />
+			<controlpoint xx="-14" yy="0" zz="-14" />
+			<controlpoint xx="-15" yy="0" zz="-15" />
+			<controlpoint xx="-16" yy="0" zz="-16" />
+			<controlpoint xx="-17" yy="0" zz="-17" /> 
+
 		
 			
 			
@@ -177,18 +206,21 @@
 
 			<controlpoint xx="0" yy="0" zz="0" />
 			<controlpoint xx="0" yy="0" zz="3" />
-			<controlpoint xx="3" yy="0" zz="6" />
+			<controlpoint xx="5" yy="0" zz="7" />
 			
 			
 		
-			
-			
-
 		</animation>
 
-		<animation id="animation2" span="10" type="circular"
+		<animation id="animation2" span="5" type="circular"
 					centerx="-1" centery="0" centerz="-1"
 					radius="50" startang="0" rotang="360" />
+
+		<animation id="animation4" span="5" type="circular"
+					centerx="-1" centery="0" centerz="-1"
+					radius="50" startang="0" rotang="360" />
+		
+		
 
 	</animations>
     
@@ -280,7 +312,7 @@
 
             	<animationref id="animation2"/>
             	<animationref id="animation3"/>
-            	<animationref id="animation2"/>
+            	<animationref id="animation4"/>
 
             </animation>
        
