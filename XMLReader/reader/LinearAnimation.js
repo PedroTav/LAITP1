@@ -16,7 +16,8 @@
     var x = this.currentControlPoint.getX() - controlvector[0].getX();
     var y = this.currentControlPoint.getY() - controlvector[0].getY();
     var z = this.currentControlPoint.getZ() - controlvector[0].getZ();
-    this.currentPath = new Coords(x, y, z);
+    var norm = this.getNorm(x, y, z);
+    this.currentPath = new Coords(x/norm, y/norm, z/norm);
 
     this.dx = controlvector[1].getX() - controlvector[0].getX();
     this.dy = controlvector[1].getY() - controlvector[0].getY();
@@ -139,9 +140,11 @@ LinearAnimation.prototype.updateControlPoint = function()
       var x = this.currentControlPoint.getX() - this.controlvector[index - 1].getX();
       var y = this.currentControlPoint.getY() - this.controlvector[index - 1].getY();
       var z = this.currentControlPoint.getZ() - this.controlvector[index - 1].getZ();
-      this.currentPath.x = x;
-      this.currentPath.y = y;
-      this.currentPath.z = z;
+      var norm = this.getNorm(x, y, z);
+      
+      this.currentPath.x = x/norm;
+      this.currentPath.y = y/norm;
+      this.currentPath.z = z/norm;
 
       this.dx = this.controlvector[index].getX() - this.controlvector[index - 1].getX();
       this.dy = this.controlvector[index].getY() - this.controlvector[index - 1].getY();
@@ -150,4 +153,9 @@ LinearAnimation.prototype.updateControlPoint = function()
       this.curDx = 0;
       this.curDy = 0;
       this.curDz = 0;
+}
+
+LinearAnimation.prototype.getNorm = function(x, y, z)
+{
+    return Math.sqrt(x*x + y*y + z*z);
 }
