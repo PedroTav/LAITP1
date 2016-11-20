@@ -62,10 +62,10 @@ function MyTorus(scene, iRadius, oRadius, nsides, rings) {
 // 	this.indices = [];
  	
 	for(var i = 0; i < this.nsides; i++) {
-		this.indices.push(i*4+0+inaux,i*4+2+inaux,i*4+1+inaux);
+		this.indices.push(i*4+1+inaux,i*4+2+inaux,i*4+0+inaux);
 	}
 	for(var i = 0; i < this.nsides; i++) {
-		this.indices.push(i*4+3+inaux,i*4+1+inaux,i*4+2+inaux);
+		this.indices.push(i*4+2+inaux,i*4+1+inaux,i*4+3+inaux);
 	}
 
 	angle = 0;
