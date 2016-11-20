@@ -36,8 +36,6 @@
     this.x = controlvector[0].getX();
     this.y = controlvector[0].getY();
     this.z = controlvector[0].getZ();
-
-    console.log(this);
  };
 
 

@@ -24,66 +24,11 @@ XMLscene.prototype.init = function (application) {
 
     this.component = new MyComponent(this);
 
-    /*this.appearance = new CGFappearance(this);
-    this.appearance.loadTexture("textures/floor.png");*/
-
-    //this.quad = new MyQuad(this, 1, 2, 1, 2);
-
-	var controlpoints = [	// U = 0
-						[ // V = 0..3;
-							 [ -2.0, -2.0, 0, 1 ],
-							 [ -2.0, -1.0, 0, 1 ],
-							 [ -2.0, 1.0, 0, 1 ],
-							 [ -2.0, 2.0, 0, 1 ]
-						],
-						// U = 1
-						[ // V = 0..3
-							 [ 0, -2.0, 0, 1 ],
-							 [ 0, 0, 4, 1 ],
-							 [ 0, 0, 4, 1 ],
-							 [ 0, 2.0, 0, 1 ]
-						],
-						// U = 2
-						[ // V = 0..3
-							 [ 2.0, -2.0, 0, 1 ],
-							 [ 2.0, -1.0, 0, 1 ],
-							 [ 2.0, 1.0, 0, 1 ],
-							 [ 2.0, 2.0, 0, 1 ]
-						]
-					];
-
-					console.log(controlpoints);
-
-
-	this.plane = new Plane(this, 7, 4, 6, 6);
-	this.patch = new Patch(this, 2, 3, 10, 10, controlpoints);
-	this.vehicle = new MyVehicle(this);
-
-	var controlvector = [];
-
-	controlvector.push(new Coords(0, 0, -2));
-	controlvector.push(new Coords(0, 0, 1));
-	controlvector.push(new Coords(1, 0, 1));
-	//controlvector.push(new Coords(4, 4, 3));
-	//controlvector.push(new Coords(3, 3, 3));
-
-
-	this.linearAnimation = new LinearAnimation(controlvector, 10000);
-	this.circularAnimation = new CircularAnimation(new Coords(3, 0, 0), 5, Math.PI/4, Math.PI/2, 10000);
-
 	this.dt = 0;
 
 	var d = new Date();
 
 	this.previousTime = d.getTime();
-
-    this.bool = true;
-
-    this.booleans = [];
-
-	this.booleans.push(true);
-	this.booleans.push(true);
-	this.booleans.push(true);
 
 	this.lightsID = [];
 
@@ -107,7 +52,7 @@ XMLscene.prototype.init = function (application) {
 	
 	this.axis=new CGFaxis(this);
 
-	this.setUpdatePeriod(100);
+	this.setUpdatePeriod(20);
 };
 
 XMLscene.prototype.initLights = function () {
@@ -202,20 +147,7 @@ XMLscene.prototype.display = function () {
 	// Displays
 
 	this.pushMatrix();
-	/*this.translate(0, 0, 2);
-	this.appearance.apply();
-	this.quad.display();*/
 	this.component.display();
-	//this.vehicle.display();
-	//this.graph.textures[0].applyTexture();
-
-	//console.log(this.linearAnimation.getPosition(this.dt));
-
-	//this.linearAnimation.getPosition(this.dt).apply(this);
-	//this.circularAnimation.getPosition(this.dt).apply(this);
-	//this.patch.display();
-	//this.graph.textures[0].applyTexture();
-	//this.plane.display();
 	this.popMatrix();
 
 };

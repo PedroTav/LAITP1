@@ -12,7 +12,7 @@
  	this.rotAng = rotAng;
  	this.time = time;
 
- 	this.currAng = 0;
+ 	this.currAng = startAng;
     
     this.velocity = this.getVelocity();
 
@@ -24,17 +24,12 @@
 
  CircularAnimation.prototype.getPosition = function(dt)
  { 
-       if(this.currAng >= this.rotAng)
+       if(this.currAng >= this.rotAng + this.startAng)
        {
            this.over = true;
        }
-
+       
        var transformation = new MyFullTransform();
-
-       var t = new MyTransformation();
-       t.setRotate(0, 1, 0, this.startAng);
-
-       transformation.addTransform(t);
 
        if(!this.over)
        {
@@ -43,15 +38,15 @@
            this.currAng += dif/this.r;
        }
 
-       var t2 = new MyTransformation();
-       t2.setRotate(0, 1, 0, this.currAng);
-
-       transformation.addTransform(t2);
-
        var t3 = new MyTransformation();
-       t3.setTranslate(this.center.getX(), this.center.getY(), this.center.getZ());
+       t3.setTranslate(this.center.getX() + Math.cos(this.currAng)*(this.r), this.center.getY(), Math.sin(this.currAng)*(this.r) + this.center.getZ());
 
        transformation.addTransform(t3);
+
+       var t2 = new MyTransformation();
+       t2.setRotate(0, -1, 0, this.currAng);
+
+       transformation.addTransform(t2);
 
        return transformation;
  }

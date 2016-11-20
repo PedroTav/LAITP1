@@ -485,8 +485,6 @@ MySceneGraph.prototype.processPatch= function(type, name)
 		}
 	}
 
-	console.log(controlvertexes);
-
 	this.patch[this.patchID] = new Patch(this.scene, orderU, orderV, partsU, partsV, controlvertexes);
 	this.patchStrings[this.patchID] = name;
 	this.patchID++;
@@ -1181,9 +1179,6 @@ MySceneGraph.prototype.parseAnimations = function(rootElement)
 	{
 		this.processAnimation(animations[i]);
 	}
-
-	console.log(this.animations);
-	console.log(this.animationsID);
 
 	console.log("animations read");
 }

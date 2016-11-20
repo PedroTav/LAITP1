@@ -89,8 +89,6 @@
 							]
  						 ];
 
-
-	console.log("control: " + this.controlpoints);
 	//this.window1 = new Patch(this.scene, 2, 1, 10, 10, controlpoints1);
  	this.chassy1 = new Patch(this.scene, 2, 3, 10, 10, controlpoints1);
  	this.chassy2 = new Patch(this.scene, 2, 3, 10, 10, controlpoints2);
