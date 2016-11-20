@@ -68,7 +68,7 @@
             return transformation;
        }
 
-       if(this.curDx > this.dx || this.curDy > this.dy || this.curDz > this.dz)
+       if(this.curDx > Math.abs(this.dx) || this.curDy > Math.abs(this.dy) || this.curDz > Math.abs(this.dz))
        {
               this.currentControlPointIndex++;
 
