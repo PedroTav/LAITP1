@@ -40,22 +40,22 @@ Chessboard.prototype.changePoint = function(direction) {
         case "left":
        		this.su--;
        		this.su2--;
-        	this.shader.setUniformsValues({su: this.su, su2: this.su2});
+        	this.shader.setUniformsValues({div1: this.du, div2: this.dv, c1: this.c1, c2: this.c2, cs: this.cs, su: this.su, sv: this.sv, su2: this.su, sv2: this.sv});
             break;
         case "right":
         	this.su++;
         	this.su2++;
-        	this.shader.setUniformsValues({su: this.su, su2: this.su2});
+        	this.shader.setUniformsValues({div1: this.du, div2: this.dv, c1: this.c1, c2: this.c2, cs: this.cs, su: this.su, sv: this.sv, su2: this.su, sv2: this.sv});
             break;
         case "up":
-        	this.sv--;
-        	this.sv2--;
-        	this.shader.setUniformsValues({sv: this.sv, sv2: this.sv2});
+        	this.sv++;
+        	this.sv2++;
+        	this.shader.setUniformsValues({div1: this.du, div2: this.dv, c1: this.c1, c2: this.c2, cs: this.cs, su: this.su, sv: this.sv, su2: this.su, sv2: this.sv});
             break;
         case "down":
-        	this.sv++;
-        	this.sv2++
-        	this.shader.setUniformsValues({sv: this.sv, sv2: this.sv2});
+        	this.sv--;
+        	this.sv2--;
+        	this.shader.setUniformsValues({div1: this.du, div2: this.dv, c1: this.c1, c2: this.c2, cs: this.cs, su: this.su, sv: this.sv, su2: this.su, sv2: this.sv});
             break;      
 
     }
