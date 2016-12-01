@@ -9,7 +9,8 @@ uniform mat4 uMVMatrix;
 uniform mat4 uPMatrix;
 uniform mat4 uNMatrix;
 
-uniform float div;
+uniform float div1;
+uniform float div2;
 uniform int su2;
 uniform int sv2;
 
@@ -18,8 +19,8 @@ varying vec2 vTextureCoord;
 void main() {
     vTextureCoord = aTextureCoord;
 
-    highp int yi = int(vTextureCoord.y*div);
-    highp int xi = int(vTextureCoord.x*div);
+    highp int yi = int(vTextureCoord.y*div2);
+    highp int xi = int(vTextureCoord.x*div1);
 
     vec4 v = vec4(aVertexPosition, 1.0);
 

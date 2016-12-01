@@ -4,7 +4,8 @@ precision highp float;
 
 varying vec4 coords;
 
-uniform float div;
+uniform float div1;
+uniform float div2;
 uniform vec4 c1;
 uniform vec4 c2;
 uniform vec4 cs;
@@ -16,11 +17,11 @@ uniform sampler2D uSampler;
 
 void main() {
 
-    highp int yi = int(vTextureCoord.y*div);
-    highp int xi = int(vTextureCoord.x*div);
+    highp int yi = int(vTextureCoord.y*div2);
+    highp int xi = int(vTextureCoord.x*div1);
 
-    highp int y = int(mod((vTextureCoord.y * div), 2.0));
-    highp int x = int(mod((vTextureCoord.x * div), 2.0));
+    highp int y = int(mod((vTextureCoord.y * div2), 2.0));
+    highp int x = int(mod((vTextureCoord.x * div1), 2.0));
 
     gl_FragColor = texture2D(uSampler, vTextureCoord);
 

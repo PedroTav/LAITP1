@@ -165,3 +165,21 @@ MyComponent.prototype.applyAnimations = function()
         this.currentAnimation[i].apply(this.scene);
     }
 }
+
+MyComponent.prototype.changePoint = function(direction)
+{
+   
+    for(var i = 0; i < this.components.length; i++)
+    {
+        if(this.components[i] instanceof MyComponent)
+        {
+            this.components[i].changePoint(direction);
+        }
+
+         if(this.components[i] instanceof Chessboard)
+        {
+            this.components[i].changePoint(direction);
+        }
+    }
+
+}

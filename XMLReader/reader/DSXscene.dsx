@@ -254,7 +254,7 @@
 			</chessboard>
         </primitive>
         <primitive id="chessboardB">
-           	<chessboard du="4" dv="4" textureref="lego" su="1" sv="2">
+           	<chessboard du="6" dv="4" textureref="lego" su="1" sv="2">
               <c1 r="0.1" g="0.300" b="0.1" a="1.0" />
               <c2 r="0.1" g="0.600" b="0.1" a="1.0" />
       	      <cs r="0.0" g="1.0" b="0.0" a="1.0" />
