@@ -17,6 +17,7 @@ function MySceneGraph(filename, scene) {
 	this.sphere = [];
 	this.torus = [];
 	this.vehicle = [];
+	this.piece = [];
 	this.plane = [];
 	this.patch = [];
 	this.chessboard = [];
@@ -27,6 +28,7 @@ function MySceneGraph(filename, scene) {
 	this.sphereID = 0;
 	this.torusID = 0;
 	this.vehicleID = 0;
+	this.pieceID = 0;
 	this.planeID = 0;
 	this.patchID = 0;
 	this.chessboardID = 0;
@@ -39,6 +41,7 @@ function MySceneGraph(filename, scene) {
 	this.sphereStrings = [];
 	this.torusStrings = [];
 	this.vehicleStrings = [];
+	this.pieceStrings = [];
 	this.planeStrings = [];
 	this.patchStrings = [];
 	this.chessboardStrings = [];
@@ -353,6 +356,15 @@ MySceneGraph.prototype.parsePrimitives= function(rootElement)
 			continue;
 		}
 
+		type = primitives[i].getElementsByTagName('piece');
+
+		if(type != null && type.length > 0)
+		{
+			this.processPiece(type[0], name);
+			continue;
+		}
+
+
 		type = primitives[i].getElementsByTagName('chessboard');
 
 		if(type != null && type.length > 0)
@@ -438,6 +450,15 @@ MySceneGraph.prototype.processVehicle= function(type, name)
 	this.vehicle[this.vehicleID] = new Vehicle(this.scene, slices, stacks);
 	this.vehicleStrings[this.vehicleID] = name;
 	this.vehicleID++;
+}
+
+MySceneGraph.prototype.processPiece= function(type, name)
+{
+	var size = type.attributes.getNamedItem("size").value;
+			
+	this.piece[this.pieceID] = new MyPiece(this.scene, size);
+	this.pieceStrings[this.pieceID] = name;
+	this.pieceID++;
 }
 
 MySceneGraph.prototype.processPlane= function(type, name)
@@ -793,6 +814,15 @@ MySceneGraph.prototype.createNewPrimitive = function(name, c)
 		if(this.vehicleStrings[i] == name)
 		{
 			c.components.push(this.vehicle[i]);
+			//this.object.push(c);
+		}
+	}
+
+	for(var i = 0; i < this.pieceStrings.length; i++)
+	{
+		if(this.pieceStrings[i] == name)
+		{
+			c.components.push(this.piece[i]);
 			//this.object.push(c);
 		}
 	}

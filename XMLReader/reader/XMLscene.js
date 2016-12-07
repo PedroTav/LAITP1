@@ -32,18 +32,29 @@ XMLscene.prototype.init = function (application) {
 
 	this.lightsID = [];
 
-//     this.lightsBool = [];
 
-//     for(var i = 0; i < this.lights.length; i++)
-//     {
-//     	this.lightsBool.push(false);
-//     }
 	this.lightsBool = {};
 
-//     for(var i = 0; i < this.lights.length; i++)
-//     {
-//     	this.lightsBool['light' + i] = false;
-//     }
+	this.players = [
+		new Player(this, 1),
+		new Player(this, 2),
+		new Player(this, 3),
+		new Player(this, 4)
+	];
+
+	this.hitboxes = [
+		
+		new Plane(this, 3.33, 3.33, 1, 1),
+		new Plane(this, 3.33, 3.33, 1, 1),
+		new Plane(this, 3.33, 3.33, 1, 1),
+		new Plane(this, 3.33, 3.33, 1, 1),
+		new Plane(this, 3.33, 3.33, 1, 1),
+		new Plane(this, 3.33, 3.33, 1, 1),
+		new Plane(this, 3.33, 3.33, 1, 1),
+		new Plane(this, 3.33, 3.33, 1, 1),
+		new Plane(this, 3.33, 3.33, 1, 1)
+	
+	];
 
     this.cameras = [];
     this.currCamera = 0;
@@ -53,6 +64,8 @@ XMLscene.prototype.init = function (application) {
 	this.axis=new CGFaxis(this);
 
 	this.setUpdatePeriod(20);
+
+	this.setPickEnabled(true);
 };
 
 XMLscene.prototype.initLights = function () {
@@ -61,6 +74,28 @@ XMLscene.prototype.initLights = function () {
     this.lights[0].setDiffuse(1.0,1.0,1.0,1.0);
     this.lights[0].update();*/
 };
+
+XMLscene.prototype.logPicking = function ()
+{
+	if (this.pickMode == false) {
+		if (this.pickResults != null && this.pickResults.length > 0) {
+			for (var i=0; i< this.pickResults.length; i++) {
+				var obj = this.pickResults[i][0];
+				if (obj instanceof MyPiece)
+				{
+					var customId = this.pickResults[i][1];				
+					console.log("Picked object: " + obj.stuff + ", with pick id " + customId);
+				}
+				if (obj instanceof Plane)
+				{
+					var customId = this.pickResults[i][1];				
+					console.log("Picked object: " + obj + ", with pick id " + customId);
+				}
+			}
+			this.pickResults.splice(0,this.pickResults.length);
+		}		
+	}
+}
 
 XMLscene.prototype.initCameras = function () {
     this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
@@ -112,7 +147,8 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 XMLscene.prototype.display = function () {
 	// ---- BEGIN Background, camera and axis setup
-	
+	this.logPicking();
+
 	// Clear image and depth buffer everytime we update the scene
     this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
@@ -145,6 +181,37 @@ XMLscene.prototype.display = function () {
 	this.updateLights();
 
 	// Displays
+
+
+	for (i =0; i<this.players.length; i++) {
+		this.pushMatrix();
+	
+		//this.registerForPick(i+1, this.players[i]);
+		
+		this.players[i].display();
+		this.popMatrix();
+	}
+
+	var x = -3.33;
+	var z = -3.33;
+
+	for (i = 0; i<this.hitboxes.length; i++) {
+		this.pushMatrix();
+		this.translate(x,0.1,z);
+		this.rotate(-1*Math.PI/2, 1,0,0);
+		this.registerForPick(i+1, this.hitboxes[i]);
+		this.hitboxes[i].display();
+		this.popMatrix();
+
+		if(((i+1) % 3) == 0) { 
+		z = -3.33;
+		x += 3.33;
+		} else {
+			z+= 3.33;	
+		}
+	}
+
+	this.clearPickRegistration();
 
 	this.pushMatrix();
 	this.component.display();

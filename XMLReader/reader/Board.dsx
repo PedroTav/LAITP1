@@ -125,24 +125,31 @@
         <!-- Deve existir um ou mais blocos "material" -->
         <!-- Os identificadores "id" nao podem ser repetidos -->
         <material id="material1" >
-            <emission r="0.0" g="0.0" b="0.0" a="1.0" />
-            <ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-            <diffuse r="0.0" g="0.0" b="0.0" a="1.0" />
-            <specular r="0.0" g="0.0" b="0.0" a="1.0" />
+            <emission r="0.0" g="1.0" b="0.0" a="1.0" />
+            <ambient r="0.0" g="0.2" b="0.0" a="1.0" />
+            <diffuse r="0.0" g="1.0" b="0.0" a="1.0" />
+            <specular r="0.0" g="1.0" b="0.0" a="1.0" />
             <shininess value="1.0" />
         </material>
         <material id="material2" >
             <emission r="1.0" g="0.0" b="0.0" a="1.0" />
-            <ambient r="1.0" g="0.0" b="0.0" a="1.0" />
+            <ambient r="0.2" g="0.0" b="0.0" a="1.0" />
             <diffuse r="1.0" g="0.0" b="0.0" a="1.0" />
             <specular r="1.0" g="0.0" b="0.0" a="1.0" />
             <shininess value="0.0" />
         </material>
         <material id="material3" >
             <emission r="1.0" g="1.0" b="0.0" a="1.0" />
-            <ambient r="1.0" g="1.0" b="0.0" a="1.0" />
+            <ambient r="0.2" g="0.2" b="0.0" a="1.0" />
             <diffuse r="1.0" g="1.0" b="0.0" a="1.0" />
             <specular r="1.0" g="1.0" b="0.0" a="1.0" />
+            <shininess value="0.0" />
+        </material>
+         <material id="material4" >
+            <emission r="0.0" g="0.0" b="1.0" a="1.0" />
+            <ambient r="0.0" g="0.0" b="0.2" a="1.0" />
+            <diffuse r="0.0" g="0.0" b="1.0" a="1.0" />
+            <specular r="0.0" g="0.0" b="1.0" a="1.0" />
             <shininess value="0.0" />
         </material>
         
@@ -225,7 +232,7 @@
             <torus inner="0.5" outer="2.5" slices="50" loops="50" />
         </primitive>
         <primitive id="plane">
-			<plane dimX="3" dimY="2" partsX="10" partsY="10"/>
+			<plane dimX="1" dimY="3" partsX="10" partsY="10"/>
 		</primitive>
 		<primitive id="patch">
 			<patch orderU="2" orderV="3" partsU="10" partsV="10" >    
@@ -253,6 +260,22 @@
       	      <cs r="0.502" g="0.0" b="0.0" a="1.0" />
 			</chessboard>
         </primitive>
+        <primitive id="chesshand">
+           	<chessboard du="1" dv="3" textureref="wood1" su="4" sv="4">
+              <c1 r="0.4" g="0.1" b="0.1" a="1.0" />
+              <c2 r="0.8" g="0.1" b="0.1" a="1.0" />
+      	      <cs r="0.0" g="0.0" b="0.0" a="1.0" />
+			</chessboard>
+        </primitive>
+        <primitive id="pieceS">
+			<piece size="small"/>
+		</primitive>
+		 <primitive id="pieceM">
+			<piece size="medium"/>
+		</primitive>
+		 <primitive id="pieceL">
+			<piece size="large"/>
+		</primitive>
 
     </primitives>
     
@@ -276,15 +299,29 @@
             
             <children>    
 	
-				<componentref id="chessboardC" />
+				<componentref id="mainboard" />
+				<componentref id="chesshandA" />
+				<componentref id="chesshandB" />
+				<componentref id="chesshandC" />
+				<componentref id="chesshandD" />
+
+				<componentref id="Player1PieceS1" />
+				<componentref id="Player1PieceM1" />
+				<componentref id="Player1PieceL1" />
+
 				
             </children>
             
         </component>
         
-        <component id="chessboardC">
+		<!-- TABULEIRO -->
+
+        <component id="mainboard">
         
             <transformation>
+
+            	<rotate axis="x" angle="-90.0" />
+            	<scale x="10.0" y="10.0" z="10.0" />
             
             </transformation>
        
@@ -301,7 +338,130 @@
             </children>
             
         </component>
+
+        <component id="chesshandA">
         
+            <transformation>
+				
+				<translate x="6.66" y="0.0" z="0.0" />
+            	<rotate axis="x" angle="-90.0" />
+            	<scale x="3.33" y="3.33" z="3.33" />
+            
+            </transformation>
+       
+            <materials>
+                <material id="none" />
+            </materials>
+                         
+            <texture id="wood2" />
+            
+            <children>
+            
+				<primitiveref id="plane" />
+				
+            </children>
+            
+        </component>
+
+        <component id="chesshandB">
+        
+            <transformation>
+				
+				<rotate axis="y" angle="90.0" />
+				<translate x="6.66" y="0.0" z="0.0" />
+            	<rotate axis="x" angle="-90.0" />
+            	<scale x="3.33" y="3.33" z="3.33" />
+            
+            </transformation>
+       
+            <materials>
+                <material id="none" />
+            </materials>
+                         
+            <texture id="wood3" />
+            
+            <children>
+            
+				<primitiveref id="plane" />
+				
+            </children>
+            
+        </component>
+
+        <component id="chesshandC">
+        
+            <transformation>
+				
+				<translate x="-6.66" y="0.0" z="0.0" />
+            	<rotate axis="x" angle="-90.0" />
+            	<scale x="3.33" y="3.33" z="3.33" />
+            
+            </transformation>
+       
+            <materials>
+                <material id="none" />
+            </materials>
+                         
+            <texture id="lego" />
+            
+            <children>
+            
+				<primitiveref id="plane" />
+				
+            </children>
+            
+        </component>
+
+        <component id="chesshandD">
+        
+            <transformation>
+				
+				<rotate axis="y" angle="-90.0" />
+				<translate x="6.66" y="0.0" z="0.0" />
+            	<rotate axis="x" angle="-90.0" />
+            	<scale x="3.33" y="3.33" z="3.33" />
+            
+            </transformation>
+       
+            <materials>
+                <material id="none" />
+            </materials>
+                         
+            <texture id="metal" />
+            
+            <children>
+            
+				<primitiveref id="plane" />
+				
+            </children>
+            
+        </component>
+
+         <component id="chesshandD">
+        
+            <transformation>
+				
+				<translate x="6.66" y="0.0" z="0.0" />
+            	<rotate axis="x" angle="-90.0" />
+            	<scale x="3.33" y="3.33" z="3.33" />
+            
+            </transformation>
+       
+            <materials>
+                <material id="material4" />
+            </materials>
+                         
+            <texture id="none" />
+            
+            <children>
+            
+				<primitiveref id="" />
+				
+            </children>
+            
+        </component>
+      
+        			
     </components>
 
 </dsx>
