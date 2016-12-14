@@ -56,3 +56,9 @@
 	}
 	return v;
  };
+
+ Plane.prototype.picking = function() {
+
+	return "Plane";
+ 	
+ }

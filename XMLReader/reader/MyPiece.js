@@ -5,7 +5,6 @@
  function MyPiece(scene, size) {
  	CGFobject.call(this, scene);
 	
-	this.stuff = "Here";
 		
  	this.x = 0;
  	this.y = 0;
@@ -40,5 +39,11 @@
 	this.scene.scale(1,1,0.5);
  	this.piece.display();
  	this.scene.popMatrix();
+
+ }
+
+ MyPiece.prototype.picking = function() {
+
+	return "Piece";
 
  }

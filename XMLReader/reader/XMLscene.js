@@ -24,6 +24,9 @@ XMLscene.prototype.init = function (application) {
 
     this.component = new MyComponent(this);
 
+	//test
+	this.test = new MyPieceModel(this, 10, 2, 1, 1, 1);
+	
 	this.dt = 0;
 
 	var d = new Date();
@@ -81,15 +84,10 @@ XMLscene.prototype.logPicking = function ()
 		if (this.pickResults != null && this.pickResults.length > 0) {
 			for (var i=0; i< this.pickResults.length; i++) {
 				var obj = this.pickResults[i][0];
-				if (obj instanceof MyPiece)
+				if (obj)
 				{
 					var customId = this.pickResults[i][1];				
-					console.log("Picked object: " + obj.stuff + ", with pick id " + customId);
-				}
-				if (obj instanceof Plane)
-				{
-					var customId = this.pickResults[i][1];				
-					console.log("Picked object: " + obj + ", with pick id " + customId);
+					console.log("Picked object: " + obj.picking() + ", with pick id " + customId);
 				}
 			}
 			this.pickResults.splice(0,this.pickResults.length);
@@ -182,16 +180,17 @@ XMLscene.prototype.display = function () {
 
 	// Displays
 
-
+/*
 	for (i =0; i<this.players.length; i++) {
 		this.pushMatrix();
-	
-		//this.registerForPick(i+1, this.players[i]);
-		
+		// if (state==SELPIECE)
+			this.registerForPick(i+1, this.players[i]);
 		this.players[i].display();
 		this.popMatrix();
 	}
 
+	this.clearPickRegistration();
+	
 	var x = -3.33;
 	var z = -3.33;
 
@@ -199,7 +198,8 @@ XMLscene.prototype.display = function () {
 		this.pushMatrix();
 		this.translate(x,0.1,z);
 		this.rotate(-1*Math.PI/2, 1,0,0);
-		this.registerForPick(i+1, this.hitboxes[i]);
+		// if (state==SELCELL)
+			this.registerForPick(i+1+this.players.length, this.hitboxes[i]);
 		this.hitboxes[i].display();
 		this.popMatrix();
 
@@ -216,6 +216,16 @@ XMLscene.prototype.display = function () {
 	this.pushMatrix();
 	this.component.display();
 	this.popMatrix();
+
+*/
+//test
+
+
+	this.pushMatrix();
+	this.translate(0,0,2);
+	this.test.display();
+	this.popMatrix();
+
 
 };
 
