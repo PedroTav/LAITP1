@@ -267,16 +267,6 @@
       	      <cs r="0.0" g="0.0" b="0.0" a="1.0" />
 			</chessboard>
         </primitive>
-        <primitive id="pieceS">
-			<piece size="small"/>
-		</primitive>
-		 <primitive id="pieceM">
-			<piece size="medium"/>
-		</primitive>
-		 <primitive id="pieceL">
-			<piece size="large"/>
-		</primitive>
-
     </primitives>
     
     

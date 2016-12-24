@@ -29,6 +29,8 @@ XMLscene.prototype.init = function (application) {
 	
 	this.dt = 0;
 
+	this.state = 0;
+
 	var d = new Date();
 
 	this.previousTime = d.getTime();
@@ -39,25 +41,27 @@ XMLscene.prototype.init = function (application) {
 	this.lightsBool = {};
 
 	this.players = [
+		new Player(this, 0),
 		new Player(this, 1),
 		new Player(this, 2),
-		new Player(this, 3),
-		new Player(this, 4)
+		new Player(this, 3)
 	];
 
 	this.hitboxes = [
 		
-		new Plane(this, 3.33, 3.33, 1, 1),
-		new Plane(this, 3.33, 3.33, 1, 1),
-		new Plane(this, 3.33, 3.33, 1, 1),
-		new Plane(this, 3.33, 3.33, 1, 1),
-		new Plane(this, 3.33, 3.33, 1, 1),
-		new Plane(this, 3.33, 3.33, 1, 1),
-		new Plane(this, 3.33, 3.33, 1, 1),
-		new Plane(this, 3.33, 3.33, 1, 1),
-		new Plane(this, 3.33, 3.33, 1, 1)
+		new Plane(this, 3.33, 3.33, 1, 1, -3.33, -3.33),
+		new Plane(this, 3.33, 3.33, 1, 1, -3.33, 0),
+		new Plane(this, 3.33, 3.33, 1, 1, -3.33, 3.33),
+		new Plane(this, 3.33, 3.33, 1, 1, 0, -3.33),
+		new Plane(this, 3.33, 3.33, 1, 1, 0, 0),
+		new Plane(this, 3.33, 3.33, 1, 1, 0, 3.33),
+		new Plane(this, 3.33, 3.33, 1, 1, 3.33, -3.33),
+		new Plane(this, 3.33, 3.33, 1, 1, 3.33, 0),
+		new Plane(this, 3.33, 3.33, 1, 1, 3.33, 3.33)
 	
 	];
+
+	this.currentPlayer = 0;
 
     this.cameras = [];
     this.currCamera = 0;
@@ -86,8 +90,48 @@ XMLscene.prototype.logPicking = function ()
 				var obj = this.pickResults[i][0];
 				if (obj)
 				{
-					var customId = this.pickResults[i][1];				
-					console.log("Picked object: " + obj.picking() + ", with pick id " + customId);
+					if(this.state == 0 && obj instanceof MyPiece && !obj.played && obj.playerId == this.currentPlayer)
+					{
+						obj.picked = true;
+
+						this.state++;
+					}
+					else if(this.state == 1 && obj instanceof Plane)
+					{
+						if(this.currentPlayer >= 0 && this.currentPlayer < 4)
+						{
+							for(var i = 0; i < this.players[this.currentPlayer].pieces.length; i++)
+							{
+								if(this.players[this.currentPlayer].pieces[i].picked)
+								{
+									var x = obj.x;
+									var z = obj.z;
+
+									var x2 = this.players[this.currentPlayer].pieces[i].x;
+									var z2 = this.players[this.currentPlayer].pieces[i].z + 1;
+
+									var xF = x - x2;
+									var zF = z - z2;
+
+									var anim = new LinearAnimation([new Coords(0, 0, 0), new Coords(xF, 0, zF)], 1000);
+
+									this.players[this.currentPlayer].pieces[i].addAnimation(anim);
+
+									this.state = 2;
+
+									this.players[this.currentPlayer].pieces[i].picked = false;
+
+									this.currentPlayer++;
+
+									if(this.currentPlayer == 4)
+									{
+										this.currentPlayer = 0;
+										break;
+									}
+								}
+							}
+						}			
+					}
 				}
 			}
 			this.pickResults.splice(0,this.pickResults.length);
@@ -180,35 +224,23 @@ XMLscene.prototype.display = function () {
 
 	// Displays
 
-/*
+
 	for (i =0; i<this.players.length; i++) {
 		this.pushMatrix();
-		// if (state==SELPIECE)
-			this.registerForPick(i+1, this.players[i]);
 		this.players[i].display();
 		this.popMatrix();
 	}
 
 	this.clearPickRegistration();
-	
-	var x = -3.33;
-	var z = -3.33;
 
 	for (i = 0; i<this.hitboxes.length; i++) {
 		this.pushMatrix();
-		this.translate(x,0.1,z);
+		this.translate(this.hitboxes[i].x,0.1,this.hitboxes[i].z);
 		this.rotate(-1*Math.PI/2, 1,0,0);
-		// if (state==SELCELL)
-			this.registerForPick(i+1+this.players.length, this.hitboxes[i]);
+		if (this.state == 1)
+			this.registerForPick(i+1+this.players.length*9, this.hitboxes[i]);
 		this.hitboxes[i].display();
 		this.popMatrix();
-
-		if(((i+1) % 3) == 0) { 
-		z = -3.33;
-		x += 3.33;
-		} else {
-			z+= 3.33;	
-		}
 	}
 
 	this.clearPickRegistration();
@@ -217,14 +249,14 @@ XMLscene.prototype.display = function () {
 	this.component.display();
 	this.popMatrix();
 
-*/
+
 //test
 
 
-	this.pushMatrix();
+	/*this.pushMatrix();
 	this.translate(0,0,2);
 	this.test.display();
-	this.popMatrix();
+	this.popMatrix();*/
 
 
 };
@@ -274,4 +306,9 @@ XMLscene.prototype.update = function(currTime)
 	this.previousTime = currTime;
 
 	this.component.update(this.dt);
+
+	for(var i = 0; i < this.players.length; i++)
+	{
+		this.players[i].update(this.dt);
+	}
 }

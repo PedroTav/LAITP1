@@ -2,8 +2,10 @@
  * Plane
  * @constructor
  */
- function Plane(scene, dX, dY, divX, divY) {
+ function Plane(scene, dX, dY, divX, divY, x, z) {
  	
+	this.x = x || 0;
+	this.z = z || 0;
 
  	this.dX = dX;
  	this.dY = dY;
@@ -61,4 +63,10 @@
 
 	return "Plane";
  	
+ }
+
+ Plane.prototype.setCoords = function(x, z)
+ {
+ 	this.x = x;
+ 	this.z = z;
  }

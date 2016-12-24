@@ -2,10 +2,13 @@
  * MyPiece
  * @constructor
  */
- function MyPiece(scene, size) {
+ function MyPiece(scene, size, playerId) {
  	CGFobject.call(this, scene);
 	
-		
+	console.log(playerId);
+	this.playerId = playerId;	
+	this.picked = false;
+	this.played = false;
  	this.x = 0;
  	this.y = 0;
  	this.z = 0;
@@ -23,6 +26,8 @@
 
  	}
 	
+	this.animations = [];
+	this.currentAnimation = [];
 
  }
 
@@ -35,6 +40,7 @@
 
 	this.scene.pushMatrix();
 	this.scene.translate(0,0,1);
+	this.applyAnimations();
 	this.scene.rotate(90*degToRad,1,0,0);
 	this.scene.scale(1,1,0.5);
  	this.piece.display();
@@ -47,3 +53,35 @@
 	return "Piece";
 
  }
+
+MyPiece.prototype.addAnimation = function(anim)
+{
+	this.animations.push(anim);
+}
+
+MyPiece.prototype.update = function(dt)
+{
+    for(var i = 0; i < this.animations.length; i++)
+    {
+        this.currentAnimation[i] = this.animations[i].getPosition(dt);
+        
+        if(!this.animations[i].over)
+        {
+            break;
+        }
+
+        if(!this.played)
+        {
+        	this.scene.state = 0;
+        	this.played = true;
+        }
+    }
+}
+
+MyPiece.prototype.applyAnimations = function()
+{
+    for(var i = 0; i < this.currentAnimation.length; i++)
+    {
+        this.currentAnimation[i].apply(this.scene);
+    }
+}

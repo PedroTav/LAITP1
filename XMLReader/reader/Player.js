@@ -5,39 +5,43 @@
  function Player(scene, id) {
  	CGFobject.call(this, scene);
 
+ 	console.log(id);
+
  	var x = 6.66;
  	var z = 5.77;
 	
 	this.playerTex = new CGFappearance(scene);
+
+	this.id = id;
  
 
 	this.pieces = [
-		new MyPiece(scene, "small"),
-		new MyPiece(scene, "small"),
-		new MyPiece(scene, "small"),
-		new MyPiece(scene, "medium"),
-		new MyPiece(scene, "medium"),
-		new MyPiece(scene, "medium"),
-		new MyPiece(scene, "large"),
-		new MyPiece(scene, "large"),
-		new MyPiece(scene, "large")
+		new MyPiece(scene, "small", this.id),
+		new MyPiece(scene, "small", this.id),
+		new MyPiece(scene, "small", this.id),
+		new MyPiece(scene, "medium", this.id),
+		new MyPiece(scene, "medium", this.id),
+		new MyPiece(scene, "medium", this.id),
+		new MyPiece(scene, "large", this.id),
+		new MyPiece(scene, "large", this.id),
+		new MyPiece(scene, "large", this.id)
 	];
 
 	switch(id) {
-		case 1: 
+		case 0: 
 			    this.playerTex.loadTexture("textures/window.png");
 				z = -4.33;
 				break;
-		case 2: 
+		case 1: 
 			    this.playerTex.loadTexture("textures/window.png");
 				x = -3.33;
 				break;
-		case 3: 
+		case 2: 
 				this.playerTex.loadTexture("textures/window.png");
 				z = -4.33;
 				x = -1*x;
 				break;
-		case 4:	
+		case 3:	
 			    this.playerTex.loadTexture("textures/window.png");
 				x = -3.33;
 				z = -7.66;
@@ -53,7 +57,7 @@
 		this.pieces[6 + i].x = x;
 		this.pieces[6 + i].z = z;
 
-		if((id % 2) == 0)
+		if(((id + 1) % 2) == 0)
 		{
 			x += 3.33;
 		}
@@ -75,11 +79,19 @@
  	this.scene.pushMatrix();
  	this.scene.translate(this.pieces[i].x, this.pieces[i].y, this.pieces[i].z);
  	this.playerTex.apply();
- 	this.scene.registerForPick(i+1, this.pieces[i]);
+ 	this.scene.registerForPick(i+1 + this.id*9, this.pieces[i]);
  	this.pieces[i].display();
  	this.scene.popMatrix();
 
 	}
 
 
+ }
+
+ Player.prototype.update = function(dt)
+ {
+ 	for(var i = 0; i < this.pieces.length; i++)
+	{
+		this.pieces[i].update(dt);
+	}
  }
