@@ -29,20 +29,20 @@
 
 	switch(id) {
 		case 0: 
-			    this.playerTex.loadTexture("textures/window.png");
+			    this.playerTex.loadTexture("textures/yellow.png");
 				z = -4.33;
 				break;
 		case 1: 
-			    this.playerTex.loadTexture("textures/window.png");
+			    this.playerTex.loadTexture("textures/red.png");
 				x = -3.33;
 				break;
 		case 2: 
-				this.playerTex.loadTexture("textures/window.png");
+				this.playerTex.loadTexture("textures/green.png");
 				z = -4.33;
 				x = -1*x;
 				break;
 		case 3:	
-			    this.playerTex.loadTexture("textures/window.png");
+			    this.playerTex.loadTexture("textures/blue.png");
 				x = -3.33;
 				z = -7.66;
 				break;

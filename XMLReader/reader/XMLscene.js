@@ -61,6 +61,9 @@ XMLscene.prototype.init = function (application) {
 	
 	];
 
+
+	
+
 	this.currentPlayer = 0;
 
     this.cameras = [];

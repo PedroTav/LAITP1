@@ -15,13 +15,13 @@
 
  	switch(size){
 
-		case 'large': this.piece = new MyCylinder(scene, 50, 1, 0.45, 0.45);
+		case 'large': this.piece = new MyTorus(scene, 0.15, 1.0, 50, 50);
 					  break;
 
-		case 'medium': this.piece = new MyCylinder(scene, 50, 1, 0.20, 0.20);
+		case 'medium': this.piece = new MyTorus(scene, 0.15, 0.60, 50, 50);
 					   break; 
 
-		case 'small': this.piece = new MyCylinder(scene, 50, 1, 0.05, 0.05);
+		case 'small': this.piece = new MyTorus(scene, 0.15, 0.20, 50, 50);;
 					  break; 
 
  	}
@@ -39,10 +39,10 @@
 	var degToRad = Math.PI / 180.0;
 
 	this.scene.pushMatrix();
-	this.scene.translate(0,0,1);
+	this.scene.translate(0,0.1,1);
 	this.applyAnimations();
 	this.scene.rotate(90*degToRad,1,0,0);
-	this.scene.scale(1,1,0.5);
+	this.scene.scale(1,1,1);
  	this.piece.display();
  	this.scene.popMatrix();
 
