@@ -9,6 +9,7 @@
 	this.playerId = playerId;	
 	this.picked = false;
 	this.played = false;
+	this.size;
  	this.x = 0;
  	this.y = 0;
  	this.z = 0;
@@ -16,12 +17,15 @@
  	switch(size){
 
 		case 'large': this.piece = new MyTorus(scene, 0.15, 1.0, 50, 50);
+					  this.size = "big";
 					  break;
 
 		case 'medium': this.piece = new MyTorus(scene, 0.15, 0.60, 50, 50);
+					   this.size = "medium";
 					   break; 
 
-		case 'small': this.piece = new MyTorus(scene, 0.15, 0.20, 50, 50);;
+		case 'small': this.piece = new MyTorus(scene, 0.15, 0.20, 50, 50);
+					  this.size = "small";
 					  break; 
 
  	}

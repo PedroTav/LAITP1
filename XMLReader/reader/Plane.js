@@ -11,6 +11,10 @@
  	this.dY = dY;
  	this.divX = divX;
  	this.divY = divY;
+
+ 	this.stateSmall = false;
+ 	this.stateMedium = false;
+ 	this.stateBig = false;
     
     var knots = this.getKnotsVector(1);
 

@@ -64,8 +64,6 @@ printboard([X|List]) :-
 	
 list([' ',' ',' ']).
 
-
-
 otrio:- tab(Board), hand(Hand1),/*escolher modo de jogo*/ 
 chooseGameMode(Mode),
 choosePlayerNr(NrPlayers),
@@ -124,10 +122,7 @@ playAI(CurrentPlayer, Board, NewBoard, Hand, NewHand, Size, Col, Line)),
    changePlayer(CurrentPlayer,NewCurrentPlayer,NrPlayers),
    gamecycle(NewBoard, NewHand, NewCurrentPlayer, NrPlayers, Mode)
   )
- 
 )).
-
-otrio:- tab(BOARD), hand(HAND), chooseGameMode(Mode).
 
 checkEndGame([H|T],1):-
 H == [0,0,0],
@@ -358,29 +353,3 @@ playAI(Player, Tab1, Tab2, Hand1, Hand2, Size, Line, Col):- randomizer(Size, Lin
 															playMoveAI(Player, Size, Line, Col, Hand1, Hand2, Tab1, Tab2).
 															
 playAI(Player, Tab1, Tab2, Hand1, Hand2, Size, Line, Col):- playAI(Player, Tab1, Tab2, Hand1, Hand2, Size, Line, Col).
-
-/*************JAVA**************/
-
-makePlayJAVA(Player, Size, Line, Col, Tab1, Tab2) :- Size == 'big', playBig(Player, Line, Col, Tab1, Tab2);
-												 Size == 'medium', playMedium(Player, Line, Col, Tab1, Tab2);
-												 Size == 'small', playSmall(Player, Line, Col, Tab1, Tab2).
-
-playJAVABig(Player, Line, Col, Tab1, Tab2) :- getCell(Line,Col,1,Tab1,Cell), Cell == 'b0', jointname('b',Player,Piece), setPiece(Line,Col,1,Piece, Tab1, Tab2).
-playJAVAMedium(Player, Line, Col, Tab1, Tab2) :- getCell(Line,Col,2,Tab1,Cell), Cell == 'm0', jointname('m',Player,Piece), setPiece(Line,Col,2,Piece, Tab1, Tab2).
-playJAVASmall(Player, Line, Col, Tab1, Tab2) :- getCell(Line,Col,3,Tab1,Cell), Cell == 's0', jointname('s',Player,Piece), setPiece(Line,Col,3,Piece, Tab1, Tab2).
-
-playJAVABig(Player, Line, Col, Tab1, []).
-playJAVAMedium(Player, Line, Col, Tab1, []).
-playJAVASmall(Player, Line, Col, Tab1, []).
-
-checkJAVAWin(Player, Size, Tab, Line, Col, Result):- (checkLocalWin(Player, Tab, Line, Col), Result = 'winner';
-													 checkLineWin(Player, Size, Tab, 1), Result = 'winner';
-													 checkColWin(Player, Size, Tab, 1), Result = 'winner';
-													 checkLineSeqWin(Player, Tab, 1), Result = 'winner';
-													 checkColSeqWin(Player, Tab, 1), Result = 'winner';
-													 checkDiagWin(Player, Size, Tab), Result = 'winner'
-													 ),!.
-													 
-checkJAVAWin(Player, Size, Tab, Line, Col, 'Continue').												 
-												
-

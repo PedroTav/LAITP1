@@ -112,4 +112,12 @@ parse_input(quit, goodbye).
 
 test(_,[],N) :- N =< 0.
 test(A,[A|Bs],N) :- N1 is N-1, test(A,Bs,N1).
-	
+
+
+
+parse_input(makePlayJAVA(Player, Size, Line, Col, Tab1),Tab2):- makePlayJAVA(Player, Size, Line, Col, Tab1, Tab2).
+
+parse_input(makeBoard,Tab):- tab(Tab).
+
+parse_input(checkJAVAWin(Player, Size, Tab, Line, Col), Result):- checkJAVAWin(Player, Size, Tab, Line, Col, Result).
+

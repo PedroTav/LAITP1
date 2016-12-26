@@ -1,4 +1,5 @@
 
+
 function XMLscene() {
     CGFscene.call(this);
 }
@@ -30,12 +31,24 @@ XMLscene.prototype.init = function (application) {
 	this.dt = 0;
 
 	this.state = 0;
+	
+	this.lastPieceSize = "small";
 
+	console.log("STARTING: ");
+	//this.startBoard();
+
+	this.board = "[[[b0,m0,s0],[b0,m0,s0],[b0,m0,s0]],[[b0,m0,s0],[b0,m0,s0],[b0,m0,s0]],[[b0,m0,s0],[b0,m0,s0],[b0,m0,s0]]]";
+
+	
 	var d = new Date();
 
 	this.previousTime = d.getTime();
+	this.previousCheckTime = d.getTime();
 
 	this.lightsID = [];
+
+	this.boardLine = 1;
+	this.boardColumn = 1;
 
 
 	this.lightsBool = {};
@@ -61,7 +74,12 @@ XMLscene.prototype.init = function (application) {
 	
 	];
 
-
+	this.playerType = [
+		"AI",
+		"AI",
+		"AI",
+		"AI"
+	];
 	
 
 	this.currentPlayer = 0;
@@ -107,14 +125,26 @@ XMLscene.prototype.logPicking = function ()
 							{
 								if(this.players[this.currentPlayer].pieces[i].picked)
 								{
+									
 									var x = obj.x;
 									var z = obj.z;
+
+									this.boardCoords(x,z);		
+
+									if(this.notpossible(obj, this.players[this.currentPlayer].pieces[i].size)) break;
+
+									this.lastPieceSize = this.players[this.currentPlayer].pieces[i].size;
+
+									this.checkMove(this.players[this.currentPlayer].pieces[i].size);
+
+								
 
 									var x2 = this.players[this.currentPlayer].pieces[i].x;
 									var z2 = this.players[this.currentPlayer].pieces[i].z + 1;
 
 									var xF = x - x2;
 									var zF = z - z2;
+
 
 									var anim = new LinearAnimation([new Coords(0, 0, 0), new Coords(xF, 0, zF)], 1000);
 
@@ -124,13 +154,17 @@ XMLscene.prototype.logPicking = function ()
 
 									this.players[this.currentPlayer].pieces[i].picked = false;
 
+
 									this.currentPlayer++;
+									
 
 									if(this.currentPlayer == 4)
-									{
-										this.currentPlayer = 0;
-										break;
-									}
+										{
+											this.currentPlayer = 0;
+											break;
+										}
+						
+									
 								}
 							}
 						}			
@@ -141,6 +175,129 @@ XMLscene.prototype.logPicking = function ()
 		}		
 	}
 }
+
+XMLscene.prototype.notpossible = function(plane, size) {
+
+	switch(size){
+
+		case "big": if(!plane.stateBig) {
+					plane.stateBig = true;
+					return false;
+					} else return true;
+
+		case "medium": if(!plane.stateMedium) {
+					plane.stateMedium = true;
+					return false;
+					} else return true;
+
+		case "small": if(!plane.stateSmall) {
+					plane.stateSmall = true;
+					return false;
+					} else return true;
+
+	}
+
+}
+
+XMLscene.prototype.boardCoords = function(x, y){
+		
+	switch(x){
+		
+		case 3.33: this.boardLine = 1;
+		break;
+		case 0: this.boardLine = 2;
+		break;
+		case -3.33: this.boardLine = 3;
+		break;
+	}	
+
+	switch(y){
+		
+		case 3.33: this.boardColumn = 1;
+		break;
+		case 0: this.boardColumn = 2;
+		break;
+		case -3.33: this.boardColumn = 3;
+		break;
+	}
+
+
+};
+
+XMLscene.prototype.trackPieces = function(){
+
+	var count = 0;
+		
+	for(var i = 0; i < this.players.length; i++){
+		
+		for(var j = 0; j < this.players[i].pieces.length; j++){
+
+			if(!this.players[i].pieces[j].played) count++;
+
+		}
+
+	}
+
+	if(count == 9){
+
+		this.state = 3;
+		alert("It's a TIE!!");
+	}
+
+};
+
+XMLscene.prototype.planeOccupied = function(x, y, size){
+		
+	switch(x){
+		
+		case 1: this.planeLine = 3.33;
+		break;
+		case 2: this.planeLine = 0;
+		break;
+		case 3: this.planeLine = -3.33;
+		break;
+	}	
+
+	switch(y){
+		
+		case 1: this.planeColumn = 3.33;
+		break;
+		case 2: this.planeColumn = 0;
+		break;
+		case 3: this.planeColumn = -3.33;
+		break;
+	}
+
+	for(var i = 0; i < this.hitboxes.length; i++){
+
+		if(this.hitboxes[i].x == this.planeLine && this.hitboxes[i].z == this.planeColumn) {
+				
+			switch(size){
+
+					case "big": if(!this.hitboxes[i].stateBig) {
+						this.hitboxes[i].stateBig = true;
+						return false;
+						} else return true;
+
+					case "medium": if(!this.hitboxes[i].stateMedium) {
+						this.hitboxes[i].stateMedium = true;
+						return false;
+						} else return true;
+
+					case "small": if(!this.hitboxes[i].stateSmall) {
+						this.hitboxes[i].stateSmall = true;
+						return false;
+						} else return true;
+			}
+
+		}
+
+	}
+
+};
+
+
+
 
 XMLscene.prototype.initCameras = function () {
     this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
@@ -205,6 +362,7 @@ XMLscene.prototype.display = function () {
 	// Apply transformations corresponding to the camera position relative to the origin
 	this.applyViewMatrix();
 
+
 	// Draw axis
 	this.axis.display();
 
@@ -252,14 +410,6 @@ XMLscene.prototype.display = function () {
 	this.component.display();
 	this.popMatrix();
 
-
-//test
-
-
-	/*this.pushMatrix();
-	this.translate(0,0,2);
-	this.test.display();
-	this.popMatrix();*/
 
 
 };
@@ -310,8 +460,181 @@ XMLscene.prototype.update = function(currTime)
 
 	this.component.update(this.dt);
 
+
+	if(this.state < 2 && currTime > this.previousCheckTime + 200){ 
+		this.checkWin(this.lastPieceSize); 
+		this.previousCheckTime = currTime;
+
+		if(this.playerType[this.currentPlayer] == "AI" && this.state == 0){
+		
+			var line = Math.floor(Math.random() * (4 - 1) + 1);
+			var column = Math.floor(Math.random() * (4 - 1) + 1);
+
+			var random = Math.floor(Math.random() * (9 - 0) + 0);
+
+			console.log("RANDOM: " + random);
+
+			while(this.players[this.currentPlayer].pieces[random].played || this.planeOccupied(line, column, this.players[this.currentPlayer].pieces[random].size) ){
+
+				 line = Math.random() * (4 - 1) + 1;
+				 column = Math.random() * (4 - 1) + 1;
+
+				 random = Math.random() * (9 - 0) + 0;
+			}
+
+			console.log("planeLine: " + this.planeLine);
+			console.log("planeColumn: " + this.planeColumn);
+
+			this.boardLine = line;
+			this.boardColumn = column;
+
+			this.lastPieceSize = this.players[this.currentPlayer].pieces[random].size;
+
+			this.checkMove(this.players[this.currentPlayer].pieces[random].size);
+
+			var x2 = this.players[this.currentPlayer].pieces[random].x;
+			var z2 = this.players[this.currentPlayer].pieces[random].z + 1;
+
+			var xF = this.planeLine - x2;
+			var zF = this.planeColumn - z2;
+
+			console.log("xF: " + xF);
+			console.log("zF: " + zF);
+
+			console.log("x2: " + x2);
+			console.log("z2: " + z2);
+
+			var anim = new LinearAnimation([new Coords(0, 0, 0), new Coords(xF, 0, zF)], 1000);
+
+			console.log("ANIMATION: " + anim);
+
+			this.players[this.currentPlayer].pieces[random].addAnimation(anim);
+
+			this.state = 2;
+
+			this.players[this.currentPlayer].pieces[random].picked = false;
+
+
+			this.currentPlayer++;
+
+
+			if(this.currentPlayer == 4)
+				{
+					this.currentPlayer = 0;
+				}
+
+	}
+
+	}
+
+	if(this.state != 3) this.trackPieces();
+
+	
 	for(var i = 0; i < this.players.length; i++)
 	{
 		this.players[i].update(this.dt);
 	}
+}
+
+function getPrologRequest(requestString, onSuccess, scene, onError, port)
+	{
+		var requestPort = port || 8081
+		var request = new XMLHttpRequest();
+		request.open('GET', 'http://localhost:'+requestPort+'/'+requestString, true);
+		request.scene = scene;
+
+		request.onload = onSuccess || function(data){console.log("Request successful. Reply: " + data.target.response);};
+		request.onerror = onError || function(){console.log("Error waiting for response");};
+
+		request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+		request.send();
+	}
+	
+function makeRequest()
+	{
+		// Get Parameter Values
+		var requestString = "helloworld"; 		
+		
+		// Make Request
+		getPrologRequest(requestString, handleReply);
+	}
+
+XMLscene.prototype.startBoard = function()
+ {
+	var requestString = "makeBoard";
+	
+	getPrologRequest(requestString, handleReplyStartBoard, this);
+	console.log(this.board);
+		
+	
+ }
+
+	//Handle the Reply
+function handleReply(data){
+		console.log(data.target.response);
+	}
+	
+function handleReplyStartBoard(data){
+			
+		this.scene.board = data.target.response;
+		console.log(this.scene);
+			
+	}
+	
+XMLscene.prototype.setBoard = function(board){
+
+	this.board = board;
+	
+}
+
+XMLscene.prototype.checkMove = function(size)
+ {
+	var requestString = "makePlayJAVA(" + (this.currentPlayer+1) + "," + size + "," + this.boardLine + "," + this.boardColumn + "," + this.board + ")";
+	
+	console.log(requestString);
+	
+	getPrologRequest(requestString, handleReplyCheckMove, this);
+
+	return this.moveOK;
+	
+ }
+
+function handleReplyCheckMove(data){
+			
+		var board = data.target.response;
+
+		if(board != "[]"){
+		
+			this.scene.board = board;
+		}
+
+
+}
+
+XMLscene.prototype.checkWin = function(size)
+ {
+	var player = this.currentPlayer;
+
+	if(player == 0) player = 4;
+
+	var requestString = "checkJAVAWin(" + player + "," + size + "," + this.board + "," + this.boardLine + "," + this.boardColumn + ")";
+	
+	console.log(requestString);
+	
+	getPrologRequest(requestString, handleReplyCheckWin, this);
+
+	
+ }
+
+ function handleReplyCheckWin(data){
+			
+		var response = data.target.response;
+
+		if(response == "winner"){
+		
+			this.scene.state = 3;	
+			alert("Player " + (this.scene.currentPlayer+1) + " wins!");
+		}
+
+
 }

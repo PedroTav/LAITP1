@@ -99,9 +99,9 @@ TPscene.prototype.display = function () {
                 0.0, 0.0, 0.0, 1.0  ];
 
 	// Multiplication of the previous transformations
-	//this.multMatrix(tra);     // GT = GT * tra
-	//this.multMatrix(rot);     // GT = GT * rot
-	//this.multMatrix(sca);     // GT = GT * sca
+	this.multMatrix(tra);     // GT = GT * tra
+	this.multMatrix(rot);     // GT = GT * rot
+	this.multMatrix(sca);     // GT = GT * sca
 
 
 	// ---- END Geometric transformation section
