@@ -14,7 +14,7 @@ function getUrlVars() {
 serialInclude(['../lib/CGF.js', 'XMLscene.js', 'MySceneGraph.js', 'Illumination.js', 'Camera.js', 'Color.js', 'Coords.js', 'MyQuad.js' ,
 'MyCylinder.js' , 'MyComponent.js', 'MyTransformation.js', 'MyFullTransform.js', 'MyTriangle.js', 'MyCylinderWithTops.js', 'MyCircle.js', 
 'MySphere.js', 'MySemiSphere.js', 'Texture.js', 'Material.js', 'MyInterface.js', 'MyTorus.js', 'Plane.js', 'Patch.js', 'Animation.js', 
-'LinearAnimation.js', 'CircularAnimation.js', 'MyVehicle.js', 'Chessboard.js', 'Vehicle.js', 'MyPiece.js', 'Player.js', 'MyPieceModel.js',
+'LinearAnimation.js', 'CircularAnimation.js', 'MyVehicle.js', 'Chessboard.js', 'Vehicle.js', 'MyPiece.js', 'Player.js', 'MyPieceModel.js', 'ArcAnimation.js', 
 
 
 main=function()
@@ -36,7 +36,7 @@ main=function()
 	// get file name provided in URL, e.g. http://localhost/myproj/?file=myfile.xml 
 	// or use "demo.xml" as default (assumes files in subfolder "scenes", check MySceneGraph constructor) 
 	
-	var filename=getUrlVars()['file'] || "../Board.dsx";
+	var filename=getUrlVars()['file'] || "../" + myScene.currambient + ".dsx";
 
 	// create and load graph, and associate it to scene. 
 	// Check console for loading errors

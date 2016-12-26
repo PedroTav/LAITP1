@@ -88,6 +88,9 @@ XMLscene.prototype.init = function (application) {
 		"Human",
 		"Human"
 	];
+
+	this.ambient = "Board";
+	this.currambient = "Board";
 	
 
 	this.currentPlayer = 0;
@@ -160,7 +163,7 @@ XMLscene.prototype.logPicking = function ()
 									var zF = z - z2;
 
 
-									var anim = new LinearAnimation([new Coords(0, 0, 0), new Coords(xF, 0, zF)], 1000);
+									var anim = new ArcAnimation([new Coords(0, 0, 0), new Coords(xF, 0, zF)],2,1000);
 
 									this.players[this.currentPlayer].pieces[i].addAnimation(anim);
 
@@ -410,18 +413,25 @@ XMLscene.prototype.display = function () {
 
 	this.clearPickRegistration();
 
+	this.appearance1 = new CGFappearance(this);
+	this.appearance2 = new CGFappearance(this);
+	this.appearance1.setAmbient(1,1,1,1);
+	this.appearance1.setAmbient(0,0,0,1);
+
 	for (i = 0; i<this.hitboxes.length; i++) {
 		this.pushMatrix();
-		this.translate(this.hitboxes[i].x,0.1,this.hitboxes[i].z);
+		this.translate(this.hitboxes[i].x,0,this.hitboxes[i].z);
 		this.rotate(-1*Math.PI/2, 1,0,0);
 		if (this.state == 1)
 			this.registerForPick(i+1+this.players.length*9, this.hitboxes[i]);
+		if(i % 2 == 0) this.appearance1.apply();
+		else this.appearance2.apply();
 		this.hitboxes[i].display();
 		this.popMatrix();
 	}
 
 	this.clearPickRegistration();
-
+	
 	this.pushMatrix();
 	this.component.display();
 	this.popMatrix();
@@ -477,6 +487,8 @@ XMLscene.prototype.update = function(currTime)
 	this.component.update(this.dt);
 
 	this.updateDefaultCamera(this.dt);
+
+	this.updateAmbient();
 
 	if(this.playerType[this.currentPlayer] == "None")
 	{
@@ -787,4 +799,10 @@ XMLscene.prototype.updateDefaultCamera = function(dt)
     this.interface.setActiveCamera(this.camera);
 
     this.lastCamera = this.currCamera;
+}
+
+XMLscene.prototype.updateAmbient = function() {
+
+	this.currambient = this.ambient;
+
 }

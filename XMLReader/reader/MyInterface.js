@@ -64,6 +64,8 @@ MyInterface.prototype.init = function(application) {
 
 	this.gui.add(this.scene, 'currCamera', { Camera1: 0, Camera2: 1, Camera3: 2, Camera4: 3 })
 
+	this.gui.add(this.scene, 'ambient', { Board: 'Board', Board2: 'Board2' } );
+
 // 	this.scene.lightsBool.forEach(function(light){
 // 		luzes.add(this.scene, this.i);
 // 		this.i++;
