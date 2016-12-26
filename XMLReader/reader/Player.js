@@ -13,6 +13,7 @@
 	this.playerTex = new CGFappearance(scene);
 
 	this.id = id;
+	this.won = false;
  
 
 	this.pieces = [
@@ -94,4 +95,14 @@
 	{
 		this.pieces[i].update(dt);
 	}
+ }
+
+ Player.prototype.reset = function()
+ {
+ 	this.won = false;
+
+ 	for(var i = 0; i < this.pieces.length; i++)
+ 	{
+ 		this.pieces[i].reset();
+ 	}
  }

@@ -74,3 +74,10 @@
  	this.x = x;
  	this.z = z;
  }
+
+Plane.prototype.reset = function()
+{
+	this.stateSmall = false;
+ 	this.stateMedium = false;
+ 	this.stateBig = false;
+}

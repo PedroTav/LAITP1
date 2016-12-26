@@ -27,29 +27,37 @@ XMLscene.prototype.init = function (application) {
 
 	//test
 	this.test = new MyPieceModel(this, 10, 2, 1, 1, 1);
+
+	this.Player1 = "Human";
+	this.Player2 = "Human";
+	this.Player3 = "Human";
+	this.Player4 = "Human";
 	
 	this.dt = 0;
 
 	this.state = 0;
+	this.gameOver = false;
 	
 	this.lastPieceSize = "small";
 
-	console.log("STARTING: ");
-	//this.startBoard();
+	this.alertDone = false;
 
 	this.board = "[[[b0,m0,s0],[b0,m0,s0],[b0,m0,s0]],[[b0,m0,s0],[b0,m0,s0],[b0,m0,s0]],[[b0,m0,s0],[b0,m0,s0],[b0,m0,s0]]]";
 
-	
 	var d = new Date();
 
 	this.previousTime = d.getTime();
 	this.previousCheckTime = d.getTime();
+	this.previousPlayTime = d.getTime();
 
 	this.lightsID = [];
 
 	this.boardLine = 1;
 	this.boardColumn = 1;
 
+	this.playerWin = 0;
+
+	this.tie = false;
 
 	this.lightsBool = {};
 
@@ -75,17 +83,24 @@ XMLscene.prototype.init = function (application) {
 	];
 
 	this.playerType = [
-		"AI",
-		"AI",
-		"AI",
-		"AI"
+		"Human",
+		"Human",
+		"Human",
+		"Human"
 	];
 	
 
 	this.currentPlayer = 0;
 
     this.cameras = [];
+    this.defaultCameras = [
+    	new CGFcamera(0.4, 0.1, 500, vec3.fromValues(35, 35, 35), vec3.fromValues(0, 0, 0)),
+    	new CGFcamera(0.4, 0.1, 500, vec3.fromValues(-35, 35, 35), vec3.fromValues(0, 0, 0)),
+    	new CGFcamera(0.4, 0.1, 500, vec3.fromValues(-35, 35, -35), vec3.fromValues(0, 0, 0)),
+    	new CGFcamera(0.4, 0.1, 500, vec3.fromValues(35, 35, -35), vec3.fromValues(0, 0, 0))
+    ];
     this.currCamera = 0;
+    this.lastCamera = 0;
 
     this.enableTextures(true);
 	
@@ -125,7 +140,6 @@ XMLscene.prototype.logPicking = function ()
 							{
 								if(this.players[this.currentPlayer].pieces[i].picked)
 								{
-									
 									var x = obj.x;
 									var z = obj.z;
 
@@ -163,6 +177,8 @@ XMLscene.prototype.logPicking = function ()
 											this.currentPlayer = 0;
 											break;
 										}
+
+									console.log("asd");
 						
 									
 								}
@@ -240,8 +256,8 @@ XMLscene.prototype.trackPieces = function(){
 
 	if(count == 9){
 
-		this.state = 3;
-		alert("It's a TIE!!");
+		this.gameOver = true;
+		this.tie = true;
 	}
 
 };
@@ -460,10 +476,53 @@ XMLscene.prototype.update = function(currTime)
 
 	this.component.update(this.dt);
 
+	this.updateDefaultCamera(this.dt);
 
-	if(this.state < 2 && currTime > this.previousCheckTime + 200){ 
+	if(this.playerType[this.currentPlayer] == "None")
+	{
+		this.currentPlayer++;
+
+		if(this.currentPlayer == 4)
+		{
+			this.currentPlayer = 0;
+		}
+	}
+
+	if(this.gameOver && !this.alertDone && this.state == 0)
+	{
+		if(this.tie)
+		{
+			alert("It's a TIE!!");
+		}
+		else
+		{
+			for(var i = 0; i < this.players.length; i++)
+			{
+				if(this.players[i].won)
+				{
+					if(i == 0)
+					{
+						alert("Player " + 4 + " wins!");
+					}
+					else
+					{
+						alert("Player " + (i) + " wins!");
+					}
+				}
+			}
+		}
+
+		this.alertDone = true;
+	}
+
+	if(!this.gameOver && currTime > this.previousCheckTime + 200)
+	{
 		this.checkWin(this.lastPieceSize); 
 		this.previousCheckTime = currTime;
+	}
+
+
+	if(!this.gameOver && this.state < 2 && currTime > this.previousPlayTime + 1500){ 
 
 		if(this.playerType[this.currentPlayer] == "AI" && this.state == 0){
 		
@@ -472,18 +531,30 @@ XMLscene.prototype.update = function(currTime)
 
 			var random = Math.floor(Math.random() * (9 - 0) + 0);
 
-			console.log("RANDOM: " + random);
+			var i = 0;
 
 			while(this.players[this.currentPlayer].pieces[random].played || this.planeOccupied(line, column, this.players[this.currentPlayer].pieces[random].size) ){
 
-				 line = Math.random() * (4 - 1) + 1;
-				 column = Math.random() * (4 - 1) + 1;
+				line = Math.floor(Math.random() * (4 - 1) + 1);
+				column = Math.floor(Math.random() * (4 - 1) + 1);
 
-				 random = Math.random() * (9 - 0) + 0;
+				random = Math.floor(Math.random() * (9 - 0) + 0);
+
+				if(this.gameOver)
+				{
+					return;
+				}
+
+				this.trackPieces();
+
+				if(i == 1000)
+				{
+					this.gameOver = true;
+					this.tie = true;
+				}
+
+				i++;
 			}
-
-			console.log("planeLine: " + this.planeLine);
-			console.log("planeColumn: " + this.planeColumn);
 
 			this.boardLine = line;
 			this.boardColumn = column;
@@ -498,15 +569,7 @@ XMLscene.prototype.update = function(currTime)
 			var xF = this.planeLine - x2;
 			var zF = this.planeColumn - z2;
 
-			console.log("xF: " + xF);
-			console.log("zF: " + zF);
-
-			console.log("x2: " + x2);
-			console.log("z2: " + z2);
-
 			var anim = new LinearAnimation([new Coords(0, 0, 0), new Coords(xF, 0, zF)], 1000);
-
-			console.log("ANIMATION: " + anim);
 
 			this.players[this.currentPlayer].pieces[random].addAnimation(anim);
 
@@ -523,11 +586,13 @@ XMLscene.prototype.update = function(currTime)
 					this.currentPlayer = 0;
 				}
 
-	}
+		}
+
+		this.previousPlayTime = currTime;
 
 	}
 
-	if(this.state != 3) this.trackPieces();
+	if(!this.gameOver) this.trackPieces();
 
 	
 	for(var i = 0; i < this.players.length; i++)
@@ -607,13 +672,13 @@ function handleReplyCheckMove(data){
 		
 			this.scene.board = board;
 		}
-
-
 }
 
 XMLscene.prototype.checkWin = function(size)
  {
 	var player = this.currentPlayer;
+
+	this.playerWin = this.currentPlayer;
 
 	if(player == 0) player = 4;
 
@@ -632,9 +697,94 @@ XMLscene.prototype.checkWin = function(size)
 
 		if(response == "winner"){
 		
-			this.scene.state = 3;	
-			alert("Player " + (this.scene.currentPlayer+1) + " wins!");
+			this.scene.gameOver = true;
+			this.scene.players[this.scene.playerWin].won = true;
+		}
+}
+
+XMLscene.prototype.resetGame = function()
+{
+	this.playerType[0] = this.Player1;
+	this.playerType[1] = this.Player2;
+	this.playerType[2] = this.Player3;
+	this.playerType[3] = this.Player4;
+
+	this.dt = 0;
+
+	this.state = 0;
+	this.gameOver = false;
+	
+	this.lastPieceSize = "small";
+
+	this.alertDone = false;
+
+	this.board = "[[[b0,m0,s0],[b0,m0,s0],[b0,m0,s0]],[[b0,m0,s0],[b0,m0,s0],[b0,m0,s0]],[[b0,m0,s0],[b0,m0,s0],[b0,m0,s0]]]";
+
+	var d = new Date();
+
+	this.previousTime = d.getTime();
+	this.previousCheckTime = d.getTime();
+	this.previousPlayTime = d.getTime();
+
+	this.boardLine = 1;
+	this.boardColumn = 1;
+
+	this.playerWin = 0;
+
+	this.tie = false;
+
+	this.currentPlayer = 0;
+
+	for(var i = 0; i < this.players.length; i++)
+	{
+		this.players[i].reset();
+	}
+
+	for(var i = 0; i < this.hitboxes.length; i++)
+	{
+		this.hitboxes[i].reset();
+	}
+}
+
+XMLscene.prototype.updateDefaultCamera = function(dt)
+{
+	if(this.currCamera != this.lastCamera)
+	{
+		this.changingCamera = true;
+
+		var x = this.defaultCameras[this.lastCamera].position[0];
+		var z = this.defaultCameras[this.lastCamera].position[2];
+
+		var x2 = this.defaultCameras[this.currCamera].position[0];
+		var z2 = this.defaultCameras[this.currCamera].position[2];
+
+		this.cameraAnimation = new LinearAnimation([new Coords(x, 35, z), new Coords(x2, 35, z2)], 1000);
+	}
+
+	if(this.changingCamera)
+	{
+		var currentAnimation = this.cameraAnimation.getPosition(dt);
+		var x = currentAnimation.transformations[1].x;
+		var z = currentAnimation.transformations[1].z;
+
+		if(this.cameraAnimation.over)
+		{
+			this.changingCamera = false;
 		}
 
+		var fov = this.defaultCameras[this.currCamera].fov;
+		var near = this.defaultCameras[this.currCamera].near;
+		var far = this.defaultCameras[this.currCamera].far;
+		var target = this.defaultCameras[this.currCamera].target;
 
+		this.camera = new CGFcamera(fov, near, far, vec3.fromValues(x, 35, z), target);
+	}
+	else
+	{
+		this.camera = this.defaultCameras[this.currCamera];
+	}
+
+    this.interface.setActiveCamera(this.camera);
+
+    this.lastCamera = this.currCamera;
 }

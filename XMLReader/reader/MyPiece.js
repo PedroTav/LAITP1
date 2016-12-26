@@ -89,3 +89,12 @@ MyPiece.prototype.applyAnimations = function()
         this.currentAnimation[i].apply(this.scene);
     }
 }
+
+MyPiece.prototype.reset = function()
+{
+	this.picked = false;
+	this.played = false;
+
+	this.animations = [];
+	this.currentAnimation = [];
+}

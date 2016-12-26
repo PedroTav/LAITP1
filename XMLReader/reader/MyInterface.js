@@ -52,6 +52,17 @@ MyInterface.prototype.init = function(application) {
 // 	}
 // 	var i = 0;
 
+	this.gui.add(this.scene, 'Player1', [ 'Human', 'AI', 'None'] );
+
+	this.gui.add(this.scene, 'Player2', [ 'Human', 'AI', 'None'] );
+
+	this.gui.add(this.scene, 'Player3', [ 'Human', 'AI', 'None'] );
+
+	this.gui.add(this.scene, 'Player4', [ 'Human', 'AI', 'None'] );
+
+	this.gui.add(this.scene, 'resetGame');
+
+	this.gui.add(this.scene, 'currCamera', { Camera1: 0, Camera2: 1, Camera3: 2, Camera4: 3 })
 
 // 	this.scene.lightsBool.forEach(function(light){
 // 		luzes.add(this.scene, this.i);
