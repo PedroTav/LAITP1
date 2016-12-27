@@ -1,4 +1,4 @@
-
+var TIMER_TIME = 10000;
 
 function XMLscene() {
     CGFscene.call(this);
@@ -37,10 +37,24 @@ XMLscene.prototype.init = function (application) {
 
 	this.state = 0;
 	this.gameOver = false;
+
+	this.watching = false;
 	
 	this.lastPieceSize = "small";
 
+	this.animationSequence = [];
+
+	this.currentAnimation = [];
+
+	this.lastBoards = [];
+
+	this.lastPieces = [];
+
+	this.lastPlanes = [];
+
 	this.alertDone = false;
+
+	this.CurrentPlayer = 1;
 
 	this.board = "[[[b0,m0,s0],[b0,m0,s0],[b0,m0,s0]],[[b0,m0,s0],[b0,m0,s0],[b0,m0,s0]],[[b0,m0,s0],[b0,m0,s0],[b0,m0,s0]]]";
 
@@ -49,6 +63,8 @@ XMLscene.prototype.init = function (application) {
 	this.previousTime = d.getTime();
 	this.previousCheckTime = d.getTime();
 	this.previousPlayTime = d.getTime();
+	this.previousPlay = d.getTime();
+	this.timer = TIMER_TIME;
 
 	this.lightsID = [];
 
@@ -123,6 +139,11 @@ XMLscene.prototype.initLights = function () {
 
 XMLscene.prototype.logPicking = function ()
 {
+	if(this.watching)
+	{
+		return;
+	}
+
 	if (this.pickMode == false) {
 		if (this.pickResults != null && this.pickResults.length > 0) {
 			for (var i=0; i< this.pickResults.length; i++) {
@@ -154,7 +175,7 @@ XMLscene.prototype.logPicking = function ()
 
 									this.checkMove(this.players[this.currentPlayer].pieces[i].size);
 
-								
+									this.lastPieces.push(this.players[this.currentPlayer].pieces[i]);
 
 									var x2 = this.players[this.currentPlayer].pieces[i].x;
 									var z2 = this.players[this.currentPlayer].pieces[i].z + 1;
@@ -162,8 +183,11 @@ XMLscene.prototype.logPicking = function ()
 									var xF = x - x2;
 									var zF = z - z2;
 
+									this.lastPlanes.push(obj);
 
 									var anim = new ArcAnimation([new Coords(0, 0, 0), new Coords(xF, 0, zF)],2,1000);
+
+									this.animationSequence.push(new ArcAnimation([new Coords(0, 0, 0), new Coords(xF, 0, zF)],2,1000));
 
 									this.players[this.currentPlayer].pieces[i].addAnimation(anim);
 
@@ -176,12 +200,16 @@ XMLscene.prototype.logPicking = function ()
 									
 
 									if(this.currentPlayer == 4)
-										{
-											this.currentPlayer = 0;
-											break;
-										}
+									{
+										this.currentPlayer = 0;
+										break;
+									}
 
-									console.log("asd");
+									var d = new Date();
+
+									this.timer = TIMER_TIME;
+
+									this.previousPlay = d.getTime();
 						
 									
 								}
@@ -264,6 +292,17 @@ XMLscene.prototype.trackPieces = function(){
 	}
 
 };
+
+XMLscene.prototype.getPlane = function(x, z)
+{
+	for(var i = 0; i < this.hitboxes.length; i++)
+	{
+		if(this.hitboxes[i].x == x && this.hitboxes[i].z == z)
+		{
+			return this.hitboxes[i];
+		}
+	}
+}
 
 XMLscene.prototype.planeOccupied = function(x, y, size){
 		
@@ -490,7 +529,16 @@ XMLscene.prototype.update = function(currTime)
 
 	this.updateAmbient();
 
-	if(this.playerType[this.currentPlayer] == "None")
+	this.timer -= this.dt;
+
+	this.CurrentPlayer = this.currentPlayer + 1;
+
+	if(this.timer < 0)
+	{
+		this.timer = 0;
+	}
+
+	if(currTime > this.previousPlay + TIMER_TIME)
 	{
 		this.currentPlayer++;
 
@@ -498,119 +546,138 @@ XMLscene.prototype.update = function(currTime)
 		{
 			this.currentPlayer = 0;
 		}
+
+		this.timer = TIMER_TIME;
+
+		this.previousPlay = currTime;
 	}
 
-	if(this.gameOver && !this.alertDone && this.state == 0)
+	if(!this.watching)
 	{
-		if(this.tie)
+		if(this.gameOver && !this.alertDone && this.state == 0)
 		{
-			alert("It's a TIE!!");
-		}
-		else
-		{
-			for(var i = 0; i < this.players.length; i++)
+			if(this.tie)
 			{
-				if(this.players[i].won)
+				alert("It's a TIE!!");
+			}
+			else
+			{
+				for(var i = 0; i < this.players.length; i++)
 				{
-					if(i == 0)
+					if(this.players[i].won)
 					{
-						alert("Player " + 4 + " wins!");
-					}
-					else
-					{
-						alert("Player " + (i) + " wins!");
+						if(i == 0)
+						{
+							alert("Player " + 4 + " wins!");
+						}
+						else
+						{
+							alert("Player " + (i) + " wins!");
+						}
 					}
 				}
 			}
+
+			this.alertDone = true;
 		}
 
-		this.alertDone = true;
-	}
-
-	if(!this.gameOver && currTime > this.previousCheckTime + 200)
-	{
-		this.checkWin(this.lastPieceSize); 
-		this.previousCheckTime = currTime;
-	}
+		if(!this.gameOver && currTime > this.previousCheckTime + 200)
+		{
+			this.checkWin(this.lastPieceSize); 
+			this.previousCheckTime = currTime;
+		}
 
 
-	if(!this.gameOver && this.state < 2 && currTime > this.previousPlayTime + 1500){ 
+		if(!this.gameOver && this.state < 2 && currTime > this.previousPlayTime + 1500){ 
 
-		if(this.playerType[this.currentPlayer] == "AI" && this.state == 0){
-		
-			var line = Math.floor(Math.random() * (4 - 1) + 1);
-			var column = Math.floor(Math.random() * (4 - 1) + 1);
+			if(this.playerType[this.currentPlayer] == "AI" && this.state == 0){
 
-			var random = Math.floor(Math.random() * (9 - 0) + 0);
+				var line = Math.floor(Math.random() * (4 - 1) + 1);
+				var column = Math.floor(Math.random() * (4 - 1) + 1);
 
-			var i = 0;
+				var random = Math.floor(Math.random() * (9 - 0) + 0);
 
-			while(this.players[this.currentPlayer].pieces[random].played || this.planeOccupied(line, column, this.players[this.currentPlayer].pieces[random].size) ){
+				var i = 0;
 
-				line = Math.floor(Math.random() * (4 - 1) + 1);
-				column = Math.floor(Math.random() * (4 - 1) + 1);
+				while(this.players[this.currentPlayer].pieces[random].played || this.planeOccupied(line, column, this.players[this.currentPlayer].pieces[random].size) ){
 
-				random = Math.floor(Math.random() * (9 - 0) + 0);
+					line = Math.floor(Math.random() * (4 - 1) + 1);
+					column = Math.floor(Math.random() * (4 - 1) + 1);
 
-				if(this.gameOver)
-				{
-					return;
+					random = Math.floor(Math.random() * (9 - 0) + 0);
+
+					if(this.gameOver)
+					{
+						return;
+					}
+
+					this.trackPieces();
+
+					if(i == 1000)
+					{
+						this.gameOver = true;
+						this.tie = true;
+					}
+
+					i++;
 				}
 
-				this.trackPieces();
+				this.lastPieces.push(this.players[this.currentPlayer].pieces[random]);
 
-				if(i == 1000)
-				{
-					this.gameOver = true;
-					this.tie = true;
-				}
+				this.lastPlanes.push(this.getPlane(this.planeLine, this.planeColumn));
 
-				i++;
-			}
+				this.boardLine = line;
+				this.boardColumn = column;
 
-			this.boardLine = line;
-			this.boardColumn = column;
+				this.lastPieceSize = this.players[this.currentPlayer].pieces[random].size;
 
-			this.lastPieceSize = this.players[this.currentPlayer].pieces[random].size;
+				this.checkMove(this.players[this.currentPlayer].pieces[random].size);
 
-			this.checkMove(this.players[this.currentPlayer].pieces[random].size);
+				var x2 = this.players[this.currentPlayer].pieces[random].x;
+				var z2 = this.players[this.currentPlayer].pieces[random].z + 1;
 
-			var x2 = this.players[this.currentPlayer].pieces[random].x;
-			var z2 = this.players[this.currentPlayer].pieces[random].z + 1;
+				var xF = this.planeLine - x2;
+				var zF = this.planeColumn - z2;
 
-			var xF = this.planeLine - x2;
-			var zF = this.planeColumn - z2;
+				var anim = new ArcAnimation([new Coords(0, 0, 0), new Coords(xF, 0, zF)], 2, 1000);
 
-			var anim = new LinearAnimation([new Coords(0, 0, 0), new Coords(xF, 0, zF)], 1000);
+				this.animationSequence.push(new ArcAnimation([new Coords(0, 0, 0), new Coords(xF, 0, zF)], 2, 1000));
 
-			this.players[this.currentPlayer].pieces[random].addAnimation(anim);
+				this.players[this.currentPlayer].pieces[random].addAnimation(anim);
 
-			this.state = 2;
+				this.state = 2;
 
-			this.players[this.currentPlayer].pieces[random].picked = false;
+				this.players[this.currentPlayer].pieces[random].picked = false;
 
 
-			this.currentPlayer++;
+				this.currentPlayer++;
 
 
-			if(this.currentPlayer == 4)
+				if(this.currentPlayer == 4)
 				{
 					this.currentPlayer = 0;
 				}
 
+				this.timer = TIMER_TIME;
+
+				this.previousPlay = currTime;
+
+			}
+
+			this.previousPlayTime = currTime;
+
 		}
 
-		this.previousPlayTime = currTime;
-
+		if(!this.gameOver) this.trackPieces();
 	}
-
-	if(!this.gameOver) this.trackPieces();
 
 	
 	for(var i = 0; i < this.players.length; i++)
 	{
 		this.players[i].update(this.dt);
 	}
+
+	this.updateAnimations();
 }
 
 function getPrologRequest(requestString, onSuccess, scene, onError, port)
@@ -681,7 +748,7 @@ function handleReplyCheckMove(data){
 		var board = data.target.response;
 
 		if(board != "[]"){
-		
+			this.scene.lastBoards.push(this.scene.board);
 			this.scene.board = board;
 		}
 }
@@ -711,6 +778,15 @@ XMLscene.prototype.checkWin = function(size)
 		
 			this.scene.gameOver = true;
 			this.scene.players[this.scene.playerWin].won = true;
+
+			if(this.scene.playerWin != 0)
+			{
+				this.scene.players[this.scene.playerWin - 1].win();
+			}
+			else
+			{
+				this.scene.players[3].win();
+			}
 		}
 }
 
@@ -737,6 +813,8 @@ XMLscene.prototype.resetGame = function()
 	this.previousTime = d.getTime();
 	this.previousCheckTime = d.getTime();
 	this.previousPlayTime = d.getTime();
+	this.previousPlay = d.getTime();
+	this.timer = TIMER_TIME;
 
 	this.boardLine = 1;
 	this.boardColumn = 1;
@@ -746,6 +824,17 @@ XMLscene.prototype.resetGame = function()
 	this.tie = false;
 
 	this.currentPlayer = 0;
+	this.CurrentPlayer = 1;
+
+	this.lastBoards = [];
+
+	this.lastPieces = [];
+
+	this.lastPlanes = [];
+
+	this.watching = false;
+
+	this.animationSequence = [];
 
 	for(var i = 0; i < this.players.length; i++)
 	{
@@ -803,6 +892,92 @@ XMLscene.prototype.updateDefaultCamera = function(dt)
 
 XMLscene.prototype.updateAmbient = function() {
 
+	if(this.currambient != this.ambient)
+	{
+		var filename=getUrlVars()['file'] || "../" + this.ambient + ".dsx";
+
+		this.graph = new MySceneGraph(filename, this);
+	}
+
 	this.currambient = this.ambient;
 
+}
+
+XMLscene.prototype.undo = function()
+{
+	if(this.state == 3)
+	{
+		return;
+	}
+
+	if(this.lastPieces.length == 0)
+	{
+		return;
+	}
+
+	this.currentPlayer--;
+
+	if(this.currentPlayer == -1)
+	{
+		this.currentPlayer = 3;
+	}
+
+	this.board = this.lastBoards[this.lastBoards.length - 1];
+
+	this.lastPieces[this.lastPieces.length - 1].reset();
+
+	this.lastPlanes[this.lastPlanes.length - 1].reset();
+
+	this.lastBoards.pop();
+	this.lastPieces.pop();
+	this.lastPlanes.pop();
+
+	this.state = 0;
+}
+
+XMLscene.prototype.watch = function()
+{
+	if(this.lastPieces.length == 0)
+	{
+		return;
+	}
+
+	for(var i = 0; i < this.lastPieces.length; i++)
+	{
+		console.log("asd");
+		this.lastPieces[i].animations = [];
+		this.lastPieces[i].currentAnimation = [];
+		this.lastPieces[i].addAnimation(this.animationSequence[i]);
+		this.lastPieces[i].playback = false;
+
+		if(i == 0)
+		{
+			this.lastPieces[i].playback = true;
+		}
+	}
+
+	this.watching = true;
+}
+
+XMLscene.prototype.updateAnimations = function()
+{
+	if(!this.watching)
+	{
+		return;
+	}
+
+	for(var i = 0; i < this.lastPieces.length; i++)
+	{
+		if(this.lastPieces[i].animations[0].over)
+		{
+			if(i != this.lastPieces.length - 1)
+			{
+				this.lastPieces[i + 1].playback = true;
+			}
+			else
+			{
+				this.watching = false;
+			}
+		}
+	}
 }

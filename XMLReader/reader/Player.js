@@ -5,8 +5,6 @@
  function Player(scene, id) {
  	CGFobject.call(this, scene);
 
- 	console.log(id);
-
  	var x = 6.66;
  	var z = 5.77;
 	
@@ -14,6 +12,7 @@
 
 	this.id = id;
 	this.won = false;
+	this.score = 0;
  
 
 	this.pieces = [
@@ -105,4 +104,9 @@
  	{
  		this.pieces[i].reset();
  	}
+ }
+
+ Player.prototype.win = function()
+ {
+ 	this.score++;
  }

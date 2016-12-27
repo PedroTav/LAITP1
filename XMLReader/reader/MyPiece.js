@@ -5,7 +5,6 @@
  function MyPiece(scene, size, playerId) {
  	CGFobject.call(this, scene);
 	
-	console.log(playerId);
 	this.playerId = playerId;	
 	this.picked = false;
 	this.played = false;
@@ -13,6 +12,8 @@
  	this.x = 0;
  	this.y = 0;
  	this.z = 0;
+
+ 	this.playback = true;
 
  	switch(size){
 
@@ -65,6 +66,11 @@ MyPiece.prototype.addAnimation = function(anim)
 
 MyPiece.prototype.update = function(dt)
 {
+	if(!this.playback)
+	{
+		return;
+	}
+
     for(var i = 0; i < this.animations.length; i++)
     {
         this.currentAnimation[i] = this.animations[i].getPosition(dt);
@@ -94,6 +100,7 @@ MyPiece.prototype.reset = function()
 {
 	this.picked = false;
 	this.played = false;
+	this.playback = true;
 
 	this.animations = [];
 	this.currentAnimation = [];

@@ -33,7 +33,6 @@ MyInterface.prototype.init = function(application) {
 	// add a group of controls (and open/expand by defult)
 
 	this.luzes = this.gui.addFolder("Luzes");
-	this.luzes.open();
 
 	//luzes.add(this.scene, 'light1');
 	
@@ -42,7 +41,7 @@ MyInterface.prototype.init = function(application) {
 	this.bool = true;
 
 	for (var i = 0; i < lightNames.length; i++) {
-		luzes.add(this.scene.lightsBool, lightNames[i]);
+		this.luzes.add(this.scene.lightsBool, lightNames[i]);
 	}
 // 	for (var i = 0; i < this.scene.lightsBool.length; i++) {
 // 		luzes.add(this.scene.lightsBool, i);
@@ -52,19 +51,34 @@ MyInterface.prototype.init = function(application) {
 // 	}
 // 	var i = 0;
 
-	this.gui.add(this.scene, 'Player1', [ 'Human', 'AI', 'None'] );
+	this.scores = this.gui.addFolder("Score");
+	this.scores.open();
 
-	this.gui.add(this.scene, 'Player2', [ 'Human', 'AI', 'None'] );
+	for (var i = 0; i < 4; i++) {
+		this.scores.add(this.scene.players[i], 'score').listen();
+	}
 
-	this.gui.add(this.scene, 'Player3', [ 'Human', 'AI', 'None'] );
+	this.gui.add(this.scene, 'Player1', [ 'Human', 'AI'] );
 
-	this.gui.add(this.scene, 'Player4', [ 'Human', 'AI', 'None'] );
+	this.gui.add(this.scene, 'Player2', [ 'Human', 'AI'] );
+
+	this.gui.add(this.scene, 'Player3', [ 'Human', 'AI'] );
+
+	this.gui.add(this.scene, 'Player4', [ 'Human', 'AI'] );
 
 	this.gui.add(this.scene, 'resetGame');
+
+	this.gui.add(this.scene, 'undo');
+
+	this.gui.add(this.scene, 'watch');
 
 	this.gui.add(this.scene, 'currCamera', { Camera1: 0, Camera2: 1, Camera3: 2, Camera4: 3 })
 
 	this.gui.add(this.scene, 'ambient', { Board: 'Board', Board2: 'Board2' } );
+
+	this.gui.add(this.scene, 'timer').listen();
+
+	this.gui.add(this.scene, 'CurrentPlayer').listen();
 
 // 	this.scene.lightsBool.forEach(function(light){
 // 		luzes.add(this.scene, this.i);
